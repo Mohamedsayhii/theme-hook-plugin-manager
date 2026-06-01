@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 source "${THPM_THEME_ENV:-$HOME/.local/share/thpm/lib/theme-env.sh}"
 
-output_file="$HOME/.config/omarchy/current/theme/vicinae.toml"
+output_file="$HOME/.config/omaniri/current/theme/vicinae.toml"
 
 if ! command -v vicinae >/dev/null 2>&1; then
     skipped "Vicinae"
@@ -11,11 +11,11 @@ if [ ! -f "$output_file" ]; then
 cat > "$output_file" << EOF
 [meta]
 version = 1
-name = "Omarchy"
-description = "Follow your Omarchy system theme."
+name = "Omaniri"
+description = "Follow your Omaniri system theme."
 variant = "dark"
 inherits = "vicinae-dark"
-icon = "$HOME/.local/share/omarchy/icon.png"
+icon = "$HOME/.local/share/omaniri/icon.png"
 
 [colors.core]
 background = "#${primary_background}"
@@ -45,9 +45,9 @@ EOF
 fi
 
 mkdir -p "$HOME/.local/share/vicinae/themes/"
-cp -p -f "$output_file" "$HOME/.local/share/vicinae/themes/omarchy.toml"
+cp -p -f "$output_file" "$HOME/.local/share/vicinae/themes/omaniri.toml"
 
-vicinae theme set omarchy
+vicinae theme set omaniri
 
 success "Vicinae theme updated!"
 exit 0

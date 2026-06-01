@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 source "${THPM_THEME_ENV:-$HOME/.local/share/thpm/lib/theme-env.sh}"
 
-output_file="$HOME/.config/omarchy/current/theme/firefox.css"
+output_file="$HOME/.config/omaniri/current/theme/firefox.css"
 
 if ! command -v firefox >/dev/null 2>&1; then
     skipped "Firefox"

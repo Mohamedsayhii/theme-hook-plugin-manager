@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 source "${THPM_THEME_ENV:-$HOME/.local/share/thpm/lib/theme-env.sh}"
 
-output_file="$HOME/.config/omarchy/current/theme/steam.css"
+output_file="$HOME/.config/omaniri/current/theme/steam.css"
 
 if ! command -v steam >/dev/null 2>&1; then
     skipped "Steam"
@@ -105,13 +105,13 @@ install_steam_theme() {
     fi
 }
 modify_steam_theme() {
-    if [[ ! -d "$adwaita_location/adwaita/colorthemes/omarchy" ]]; then
-        mkdir -p "$adwaita_location/adwaita/colorthemes/omarchy/"
+    if [[ ! -d "$adwaita_location/adwaita/colorthemes/omaniri" ]]; then
+        mkdir -p "$adwaita_location/adwaita/colorthemes/omaniri/"
     fi
 }
 modify_install_script() {
-    if ! grep -q "omarchy" "$adwaita_location/install.py"; then
-        sed -i.bak 's/\("cantarell"\)/\1, "omarchy"/' "$adwaita_location/install.py"
+    if ! grep -q "omaniri" "$adwaita_location/install.py"; then
+        sed -i.bak 's/\("cantarell"\)/\1, "omaniri"/' "$adwaita_location/install.py"
     fi
 }
 
@@ -124,10 +124,10 @@ if [[ ! -d $adwaita_location ]]; then
     exit 1
 fi
 
-cp -p -f "$output_file" "$adwaita_location/adwaita/colorthemes/omarchy/omarchy.css"
+cp -p -f "$output_file" "$adwaita_location/adwaita/colorthemes/omaniri/omaniri.css"
 
 cd "$adwaita_location" && ./install.py \
-    --color-theme omarchy \
+    --color-theme omaniri \
     --extras library/hide_whats_new > /dev/null 2>&1
 
 require_restart "steam"

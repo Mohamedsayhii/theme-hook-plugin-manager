@@ -5,9 +5,9 @@ if ! command -v tmux >/dev/null 2>&1; then
     skipped "tmux"
 fi
 
-source_file="$HOME/.config/omarchy/current/theme/tmux.conf"
-target_file="$HOME/.config/tmux/omarchy-theme.conf"
-source_line="source-file ~/.config/tmux/omarchy-theme.conf"
+source_file="$HOME/.config/omaniri/current/theme/tmux.conf"
+target_file="$HOME/.config/tmux/omaniri-theme.conf"
+source_line="source-file ~/.config/tmux/omaniri-theme.conf"
 
 if [[ -f "$HOME/.config/tmux/tmux.conf" ]]; then
     config_file="$HOME/.config/tmux/tmux.conf"

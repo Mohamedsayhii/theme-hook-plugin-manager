@@ -94,14 +94,14 @@ thpm_config_value() {
     printf '%s\n' "${value:-$default}"
 }
 
-HOOK_DIR="${THPM_HOOK_DIR:-$(thpm_config_path paths hook_dir "$HOME/.config/omarchy/hooks/theme-set.d")}"
+HOOK_DIR="${THPM_HOOK_DIR:-$(thpm_config_path paths hook_dir "$HOME/.config/omaniri/hooks/theme-set.d")}"
 THPM_STATE_DIR="${THPM_STATE_DIR:-$(thpm_config_path paths state_dir "$HOME/.local/share/thpm")}"
 THPM_VERSION_FILE="${THPM_VERSION_FILE:-$THPM_STATE_DIR/version}"
 THPM_UPDATE_CACHE="${THPM_UPDATE_CACHE:-$THPM_STATE_DIR/update-check}"
 THPM_UPDATE_CHECK_INTERVAL="${THPM_UPDATE_CHECK_INTERVAL:-$(thpm_config_value updates check_interval_seconds 86400)}"
 THPM_UPDATE_CHECK="${THPM_UPDATE_CHECK:-$(thpm_config_value updates check true)}"
 THPM_THEME_ENV_DEFAULT="${THPM_THEME_ENV:-$(thpm_config_path paths theme_env "$HOME/.local/share/thpm/lib/theme-env.sh")}"
-THPM_COLORS_FILE_DEFAULT="${THPM_COLORS_FILE:-$(thpm_config_path paths colors_file "$HOME/.config/omarchy/current/theme/colors.toml")}"
+THPM_COLORS_FILE_DEFAULT="${THPM_COLORS_FILE:-$(thpm_config_path paths colors_file "$HOME/.config/omaniri/current/theme/colors.toml")}"
 THPM_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 THPM_SKILLS_DIR="${THPM_SKILLS_DIR:-$(thpm_config_path paths skills_dir "$THPM_STATE_DIR/skills")}"
 if [[ ! -d "$THPM_SKILLS_DIR" && -d "$THPM_SCRIPT_DIR/skills" ]]; then
@@ -338,7 +338,7 @@ post_enable() {
         ;;
         "gtk")
             if command -v gsettings >/dev/null 2>&1; then
-                if [ -f "$HOME/.config/omarchy/current/theme/light.mode" ]; then
+                if [ -f "$HOME/.config/omaniri/current/theme/light.mode" ]; then
                     gsettings set org.gnome.desktop.interface gtk-theme adw-gtk3-tmp
                     gsettings set org.gnome.desktop.interface gtk-theme adw-gtk3
                 else
@@ -356,15 +356,15 @@ post_enable() {
             adwaita_location=$HOME/.local/share/steam-adwaita
             if [[ -x "$adwaita_location/install.py" ]]; then
                 cd "$adwaita_location" && ./install.py \
-                    --color-theme omarchy \
+                    --color-theme omaniri \
                     --extras library/hide_whats_new > /dev/null 2>&1
             fi
         ;;
         "vicinae")
-            vicinae theme set omarchy > /dev/null 2>&1
+            vicinae theme set omaniri > /dev/null 2>&1
         ;;
         "zen")
-            printf '%sZen themes apply on the next Omarchy theme change.\n' "$(dot warn)"
+            printf '%sZen themes apply on the next Omaniri theme change.\n' "$(dot warn)"
             printf '%sRun thpm run to apply it now.\n' "$(dot muted)"
         ;;
         *) return 0 ;;
@@ -383,7 +383,7 @@ post_disable() {
         ;;
         "gtk")
             if command -v gsettings >/dev/null 2>&1; then
-                if [ -f "$HOME/.config/omarchy/current/theme/light.mode" ]; then
+                if [ -f "$HOME/.config/omaniri/current/theme/light.mode" ]; then
                     gsettings set org.gnome.desktop.interface gtk-theme Adwaita
                 else
                     gsettings set org.gnome.desktop.interface gtk-theme Adwaita-dark
@@ -415,7 +415,7 @@ post_disable() {
 }
 
 th_run() {
-    omarchy-hook "theme-set"
+    omaniri-hook "theme-set"
 }
 
 th_install() {
@@ -714,7 +714,7 @@ doctor_check_colors() {
         fi
     done
 
-    [[ "$missing" -eq 0 ]] && doctor_ok "colors.toml has required Omarchy color keys"
+    [[ "$missing" -eq 0 ]] && doctor_ok "colors.toml has required Omaniri color keys"
 }
 
 doctor_check_browser_profile() {
@@ -834,7 +834,7 @@ doctor_check_editor_theme_extension() {
 
     doctor_check_command "$command_name" "$name"
     doctor_check_command jq jq
-    if [[ -f "$HOME/.config/omarchy/current/theme/vscode.json" ]]; then
+    if [[ -f "$HOME/.config/omaniri/current/theme/vscode.json" ]]; then
         doctor_info "$name uses current theme vscode.json; generated Base16 extension patch is skipped"
         return 0
     fi
@@ -885,7 +885,7 @@ doctor_check_plugin_specific() {
         superfile) doctor_check_command spf Superfile ;;
         tmux)
             doctor_check_command tmux tmux
-            doctor_check_file "$HOME/.config/omarchy/current/theme/tmux.conf" "Omarchy tmux theme"
+            doctor_check_file "$HOME/.config/omaniri/current/theme/tmux.conf" "Omaniri tmux theme"
         ;;
         vicinae) doctor_check_command vicinae Vicinae ;;
         typora) doctor_check_command typora Typora ;;
@@ -900,9 +900,9 @@ doctor_check_plugin_specific() {
         swaync)
             doctor_check_command swaync SwayNC
             doctor_check_command swaync-client swaync-client
-            doctor_check_file "$HOME/.config/omarchy/current/theme/colors.css" "SwayNC colors.css"
+            doctor_check_file "$HOME/.config/omaniri/current/theme/colors.css" "SwayNC colors.css"
         ;;
-        foot-live-colors) doctor_check_file "$HOME/.config/omarchy/current/theme/foot.ini" "Omarchy Foot theme" ;;
+        foot-live-colors) doctor_check_file "$HOME/.config/omaniri/current/theme/foot.ini" "Omaniri Foot theme" ;;
         vscode) doctor_check_editor_theme_extension "VS Code" code "$HOME/.vscode/extensions" ;;
         cursor) doctor_check_editor_theme_extension Cursor cursor "$HOME/.cursor/extensions" ;;
         windsurf) doctor_check_editor_theme_extension Windsurf windsurf "$HOME/.windsurf/extensions" ;;
@@ -995,7 +995,7 @@ doctor_check_duplicates() {
 }
 
 doctor_system() {
-    local legacy_dispatcher="$HOME/.config/omarchy/hooks/theme-set"
+    local legacy_dispatcher="$HOME/.config/omaniri/hooks/theme-set"
 
     echo
     echo "System:"
@@ -1005,10 +1005,10 @@ doctor_system() {
         doctor_warn "thpm CLI is not on PATH"
     fi
 
-    if command -v omarchy-hook >/dev/null 2>&1; then
-        doctor_ok "omarchy-hook command found"
+    if command -v omaniri-hook >/dev/null 2>&1; then
+        doctor_ok "omaniri-hook command found"
     else
-        doctor_error "omarchy-hook command missing; thpm run cannot fire theme-set"
+        doctor_error "omaniri-hook command missing; thpm run cannot fire theme-set"
     fi
 
     if [[ -d "$HOOK_DIR" ]]; then
@@ -1026,7 +1026,7 @@ doctor_system() {
     doctor_check_colors
 
     if [[ -f "$legacy_dispatcher" ]]; then
-        if grep -Eq 'Omarchy 3\.3\+ uses colors\.toml|Compatibility shim for older thpm installs' "$legacy_dispatcher"; then
+        if grep -Eq 'Omaniri 3\.3\+ uses colors\.toml|Compatibility shim for older thpm installs' "$legacy_dispatcher"; then
             doctor_info "legacy theme-set dispatcher is a known thpm shim"
         else
             doctor_warn "custom legacy theme-set dispatcher exists: $legacy_dispatcher"

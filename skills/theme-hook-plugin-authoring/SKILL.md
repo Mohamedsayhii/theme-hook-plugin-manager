@@ -1,11 +1,11 @@
 ---
 name: theme-hook-plugin-authoring
-description: Author, review, or update Theme Hook Plugin Manager (thpm) plugins for Omarchy theme changes. Use when creating scripts under theme-set.d/, diagnosing custom thpm hooks, adding bundled plugin behavior, documenting plugin API usage, or translating Omarchy colors.toml values into app-specific config, CSS, JSON, TOML, shell, or live-reload integration files.
+description: Author, review, or update Theme Hook Plugin Manager (thpm) plugins for Omaniri theme changes. Use when creating scripts under theme-set.d/, diagnosing custom thpm hooks, adding bundled plugin behavior, documenting plugin API usage, or translating Omaniri colors.toml values into app-specific config, CSS, JSON, TOML, shell, or live-reload integration files.
 ---
 
 # Theme Hook Plugin Authoring
 
-Use this skill to create or audit `thpm` plugins. A plugin is a Bash script run by Omarchy's native `theme-set.d` hook system when the active theme changes.
+Use this skill to create or audit `thpm` plugins. A plugin is a Bash script run by Omaniri's native `theme-set.d` hook system when the active theme changes.
 
 ## First Read
 
@@ -17,14 +17,14 @@ When working inside the `theme-hook-plugin-manager` repo, prefer these source fi
 - `tests/run.sh`: behavioral expectations and portability guards.
 - `README.md`: user-facing install, command, and troubleshooting language.
 
-Treat generated app theme files as outputs, not inputs. Theme data comes from `~/.config/omarchy/current/theme/colors.toml`.
+Treat generated app theme files as outputs, not inputs. Theme data comes from `~/.config/omaniri/current/theme/colors.toml`.
 
 ## Plugin Contract
 
 Install location:
 
 ```text
-~/.config/omarchy/hooks/theme-set.d/
+~/.config/omaniri/hooks/theme-set.d/
 ```
 
 Bundled source location in the repo:
@@ -122,22 +122,22 @@ success "myapp theme updated!"
 Save active custom plugins as:
 
 ```text
-~/.config/omarchy/hooks/theme-set.d/50-myapp.sh
+~/.config/omaniri/hooks/theme-set.d/50-myapp.sh
 ```
 
 Save disabled custom plugins as:
 
 ```text
-~/.config/omarchy/hooks/theme-set.d/50-myapp.sh.sample
+~/.config/omaniri/hooks/theme-set.d/50-myapp.sh.sample
 ```
 
 ## Portability Rules
 
-Use Bash, not zsh or fish. Keep scripts compatible with the standard tools available on an Omarchy system. Avoid GNU-only assumptions when a portable alternative is easy; existing tests specifically guard against patterns such as `grep -P` in bundled hooks.
+Use Bash, not zsh or fish. Keep scripts compatible with the standard tools available on an Omaniri system. Avoid GNU-only assumptions when a portable alternative is easy; existing tests specifically guard against patterns such as `grep -P` in bundled hooks.
 
 Do not assume an app exists just because its config directory exists. Guard both the executable and any required config/data files that the plugin reads.
 
-Do not treat app-generated theme outputs, such as terminal/editor rendered theme files, as the source of Omarchy colors unless the plugin is intentionally syncing or live-updating that app's current rendered output. For color-based plugins, read the runtime variables sourced from `colors.toml`.
+Do not treat app-generated theme outputs, such as terminal/editor rendered theme files, as the source of Omaniri colors unless the plugin is intentionally syncing or live-updating that app's current rendered output. For color-based plugins, read the runtime variables sourced from `colors.toml`.
 
 When editing user-owned files, prefer a managed block or a dedicated generated file over replacing the full file. Preserve user content outside the managed block.
 

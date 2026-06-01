@@ -2,14 +2,14 @@
 source "${THPM_THEME_ENV:-$HOME/.local/share/thpm/lib/theme-env.sh}"
 
 # Intended live destination:
-# ~/.config/omarchy/hooks/theme-set.d/25-swaync.sh
+# ~/.config/omaniri/hooks/theme-set.d/25-swaync.sh
 
 set -euo pipefail
 
-SOURCE_DIR="$HOME/.config/omarchy/current/theme"
+SOURCE_DIR="$HOME/.config/omaniri/current/theme"
 TARGET_DIR="$HOME/.config/swaync"
-THEME_NAME_FILE="$HOME/.config/omarchy/current/theme.name"
-THEME_STORE_DIR="$HOME/.config/omarchy/themes"
+THEME_NAME_FILE="$HOME/.config/omaniri/current/theme.name"
+THEME_STORE_DIR="$HOME/.config/omaniri/themes"
 
 if ! command -v swaync >/dev/null 2>&1 || ! command -v swaync-client >/dev/null 2>&1; then
     exit 0

@@ -3,7 +3,7 @@
 # shellcheck source=../lib/theme-env.sh
 source "${THPM_THEME_ENV:-$HOME/.local/share/thpm/lib/theme-env.sh}"
 
-output_file="$HOME/.config/omarchy/current/theme/vencord-system24.theme.css"
+output_file="$HOME/.config/omaniri/current/theme/vencord-system24.theme.css"
 possible_paths=(
     "$HOME/.config/Vencord/themes"
     "$HOME/.config/vesktop/themes"
@@ -98,8 +98,8 @@ create_dynamic_theme() {
 
     cat > "$output_file" << EOF
 /**
- * @name Omarchy System24
- * @description System24 Discord theme using the current Omarchy colors.toml palette.
+ * @name Omaniri System24
+ * @description System24 Discord theme using the current Omaniri colors.toml palette.
  * @author OldJobobo, refact0r
  * @version 0.1.0
  * @website https://github.com/refact0r/system24

@@ -6,10 +6,10 @@ if ! command -v qutebrowser >/dev/null 2>&1; then
 fi
 
 config_dir="$HOME/.config/qutebrowser"
-theme_dir="$config_dir/omarchy"
+theme_dir="$config_dir/omaniri"
 draw_file="$theme_dir/draw.py"
 config_file="$config_dir/config.py"
-light_file="$HOME/.config/omarchy/current/theme/light.mode"
+light_file="$HOME/.config/omaniri/current/theme/light.mode"
 
 # Determine light/dark mode
 if [ -f "$light_file" ]; then
@@ -174,16 +174,16 @@ def apply(c):
     c.colors.webpage.preferred_color_scheme = '${color_scheme}'
 EOF
 
-# Ensure config.py imports the omarchy theme
+# Ensure config.py imports the omaniri theme
 if [[ ! -f "$config_file" ]]; then
     cat > "$config_file" << 'PYEOF'
 config.load_autoconfig()
-import omarchy.draw
-omarchy.draw.apply(c)
+import omaniri.draw
+omaniri.draw.apply(c)
 PYEOF
-elif ! grep -q 'omarchy.draw' "$config_file"; then
-    sed -i '1i import omarchy.draw' "$config_file"
-    echo 'omarchy.draw.apply(c)' >> "$config_file"
+elif ! grep -q 'omaniri.draw' "$config_file"; then
+    sed -i '1i import omaniri.draw' "$config_file"
+    echo 'omaniri.draw.apply(c)' >> "$config_file"
 fi
 
 # Live reload UI colors if qutebrowser is running

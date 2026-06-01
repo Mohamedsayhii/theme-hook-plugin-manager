@@ -1,6 +1,6 @@
 # Theme Hook Plugin Manager Release
 
-This fork exists because Omarchy theming is moving quickly, while the original `omarchy-theme-hook` repo appears to have gone stale. `thpm` keeps the idea alive as an actively maintained, Omarchy-focused plugin manager with newer app support and fixes for rough edges that affect daily use.
+This fork exists because Omaniri theming is moving quickly, while the original `omaniri-theme-hook` repo appears to have gone stale. `thpm` keeps the idea alive as an actively maintained, Omaniri-focused plugin manager with newer app support and fixes for rough edges that affect daily use.
 
 ## New App Support
 
@@ -10,7 +10,7 @@ This release expands the bundled plugin set with several integrations that were 
 - **Foot live colors** for updating existing Foot terminals
 - **Obsidian Terminal** plugin colors
 - **cliamp** theme support
-- **Omarchy branding** sync for theme-provided Fastfetch/About and screensaver logos, installed disabled by default so users can opt in
+- **Omaniri branding** sync for theme-provided Fastfetch/About and screensaver logos, installed disabled by default so users can opt in
 
 The supported app list now includes browsers, editors, desktop UI, terminal tools, and game/media apps, with plugins managed through the `thpm` CLI.
 
@@ -22,14 +22,14 @@ This release also fixes several issues that could make the hook frustrating or b
 - Missing `colors.toml` now reports the intended error instead of failing with `error: command not found`
 - `thpm uninstall` now works as documented
 - Uninstall cleanup is best-effort, so missing optional integrations do not abort removal
-- Uninstall restores Omarchy's default About and screensaver branding when those source defaults are available
+- Uninstall restores Omaniri's default About and screensaver branding when those source defaults are available
 - Installer no longer requires `gum`; it falls back to a plain shell prompt
 - `thpm enable <name>` and `thpm disable <name>` now warn when the plugin name does not exist
 - README now documents that updates replace bundled plugin files
 
 ## Why This Fork
 
-The original [`imbypass/omarchy-theme-hook`](https://github.com/imbypass/omarchy-theme-hook) laid the groundwork, but Omarchy's theme format and ecosystem have kept evolving. This fork focuses on keeping the hook useful for current Omarchy systems, expanding plugin coverage, and making plugin management predictable.
+The original [`imbypass/omaniri-theme-hook`](https://github.com/imbypass/omaniri-theme-hook) laid the groundwork, but Omaniri's theme format and ecosystem have kept evolving. This fork focuses on keeping the hook useful for current Omaniri systems, expanding plugin coverage, and making plugin management predictable.
 
 ## Install
 
@@ -54,4 +54,4 @@ thpm run
 
 ## Credits
 
-Based on [`imbypass/omarchy-theme-hook`](https://github.com/imbypass/omarchy-theme-hook), with continued maintenance, expanded plugin support, and fixes for current Omarchy usage.
+Based on [`imbypass/omaniri-theme-hook`](https://github.com/imbypass/omaniri-theme-hook), with continued maintenance, expanded plugin support, and fixes for current Omaniri usage.

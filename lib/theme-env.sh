@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# Shared runtime for thpm theme hooks. Omarchy runs hooks in
-# ~/.config/omarchy/hooks/theme-set.d directly, so every bundled plugin
+# Shared runtime for thpm theme hooks. Omaniri runs hooks in
+# ~/.config/omaniri/hooks/theme-set.d directly, so every bundled plugin
 # sources this file to load the current theme colors and helper functions.
 THPM_CONFIG_FILE="${THPM_CONFIG_FILE:-${XDG_CONFIG_HOME:-$HOME/.config}/thpm/config.toml}"
 
@@ -113,7 +113,7 @@ THPM_RESTART_NOTIFICATION_COOLDOWN="$(thpm_config_value notifications.restart co
 THPM_RESTART_NOTIFICATION_TITLE="$(thpm_config_value notifications.restart title "Theme Hook Plugin Manager")"
 THPM_RESTART_NOTIFICATION_MESSAGE="$(thpm_config_value notifications.restart message "{app} requires a restart to apply theme.")"
 
-input_file="${THPM_COLORS_FILE:-$(thpm_config_path paths colors_file "$HOME/.config/omarchy/current/theme/colors.toml")}"
+input_file="${THPM_COLORS_FILE:-$(thpm_config_path paths colors_file "$HOME/.config/omaniri/current/theme/colors.toml")}"
 
 success() {
     echo -e "\e[32m[SUCCESS]\e[0m $1"
@@ -134,7 +134,7 @@ error() {
 }
 
 if [[ ! -f "$input_file" ]]; then
-    error "colors.toml not found at $input_file. Ensure your theme is compatible with Omarchy 3.3+ and includes colors.toml."
+    error "colors.toml not found at $input_file. Ensure your theme is compatible with Omaniri 3.3+ and includes colors.toml."
 fi
 
 extract_color() {

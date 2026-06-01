@@ -4,12 +4,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project context
 
-`thpm` (Theme Hook Plugin Manager) is a public fork of [imbypass/omarchy-theme-hook](https://github.com/imbypass/omarchy-theme-hook), reframed from "a theme hook" into "a plugin manager for Omarchy's existing theme-set hook." It is **not** affiliated with Omarchy.
+`thpm` (Theme Hook Plugin Manager) is a public fork of [imbypass/omaniri-theme-hook](https://github.com/imbypass/omaniri-theme-hook), reframed from "a theme hook" into "a plugin manager for Omaniri's existing theme-set hook." It is **not** affiliated with Omaniri.
 
 The fork's primary trunk is the `thpm` branch (also the GitHub default branch). The local `main` branch is kept as a clean mirror of `upstream/main` so upstream fixes can be pulled and rebased onto `thpm`. Two remotes:
 
 - `origin` → `OldJobobo/theme-hook-plugin-manager`
-- `upstream` → `imbypass/omarchy-theme-hook`
+- `upstream` → `imbypass/omaniri-theme-hook`
 
 Workflow when pulling upstream changes:
 ```
@@ -19,19 +19,19 @@ git checkout thpm && git rebase main
 
 ## Architecture
 
-The project ships three pieces of bash that get installed into Omarchy's hook tree:
+The project ships three pieces of bash that get installed into Omaniri's hook tree:
 
 ```
-omarchy-hook theme-set                      ← Omarchy fires this on theme change
+omaniri-hook theme-set                      ← Omaniri fires this on theme change
         ↓
-~/.config/omarchy/hooks/theme-set           ← dispatcher (this repo's `theme-set`)
+~/.config/omaniri/hooks/theme-set           ← dispatcher (this repo's `theme-set`)
         ↓ reads colors.toml, exports color vars + helpers
-~/.config/omarchy/hooks/theme-set.d/*.sh    ← plugins (this repo's `theme-set.d/`)
+~/.config/omaniri/hooks/theme-set.d/*.sh    ← plugins (this repo's `theme-set.d/`)
 ```
 
 Plus the user-facing CLI `thpm` (this repo's `thpm` script), installed to `~/.local/bin/thpm`.
 
-**Source of theme colors:** `~/.config/omarchy/current/theme/colors.toml` (Omarchy 3.3+). The previous source `alacritty.toml` is gone — it's now a generated artifact and may contain unrendered Jinja-style placeholders. Always read from `colors.toml`.
+**Source of theme colors:** `~/.config/omaniri/current/theme/colors.toml` (Omaniri 3.3+). The previous source `alacritty.toml` is gone — it's now a generated artifact and may contain unrendered Jinja-style placeholders. Always read from `colors.toml`.
 
 **Plugin contract** (defined by `theme-set` lines ~75-141, exported before iterating plugins):
 
@@ -40,7 +40,7 @@ Plus the user-facing CLI `thpm` (this repo's `thpm` script), installed to `~/.lo
 - A plugin signals "this app's executable isn't installed, abort early without error" by calling `skipped "AppName"` (which `exit 0`s). Do **not** use `error` for missing-app conditions — `error` exit-1's and the dispatcher will report the plugin as failed.
 - `require_restart "<process>"` accumulates names in a tmpfile; the dispatcher checks `pgrep -x` for each at the end and surfaces a single `notify-send` listing apps that need restarting.
 
-**Plugin ordering:** Plugins in `theme-set.d/` run in lexicographic order via `for hook in ~/.config/omarchy/hooks/theme-set.d/*.sh`. Names use a `NN-app.sh` numeric prefix to control ordering. Existing prefixes: `00-` (shell prerequisites like fish, fzf), `10-` (basic CLI/desktop apps), `20-` (editors-class-1), `30-` (VS Code family), `40-` (heavier integrations: Cava, Firefox, Steam), `50-` (highest — Heroic). Pick a prefix that fits this gradient when adding plugins.
+**Plugin ordering:** Plugins in `theme-set.d/` run in lexicographic order via `for hook in ~/.config/omaniri/hooks/theme-set.d/*.sh`. Names use a `NN-app.sh` numeric prefix to control ordering. Existing prefixes: `00-` (shell prerequisites like fish, fzf), `10-` (basic CLI/desktop apps), `20-` (editors-class-1), `30-` (VS Code family), `40-` (heavier integrations: Cava, Firefox, Steam), `50-` (highest — Heroic). Pick a prefix that fits this gradient when adding plugins.
 
 **Enable/disable mechanism:** "Enabled" = file is executable; "disabled" = not executable. The `thpm enable/disable` commands are wrappers around `chmod +x` / `chmod -x`. The dispatcher's `for` loop only runs `[[ -f "$hook" && -x "$hook" ]]` files. Some plugins have `post_enable`/`post_disable` side-effects defined in `thpm` itself (e.g. `gtk` toggles `gsettings`, `spotify` runs `spicetify apply`, `steam` re-runs the adwaita installer). When adding such side-effects, edit the `post_enable`/`post_disable` case statements in `thpm`.
 
@@ -54,8 +54,8 @@ for f in theme-set.d/*.sh; do bash -n "$f" || echo "FAIL: $f"; done
 # Install thpm from this working copy (overwrites any installed version)
 ./install.sh
 
-# Run the theme-set hook immediately (uses currently-applied Omarchy theme)
-omarchy-hook theme-set
+# Run the theme-set hook immediately (uses currently-applied Omaniri theme)
+omaniri-hook theme-set
 # or, after install:
 thpm run
 
@@ -70,7 +70,7 @@ thpm list
 thpm open
 ```
 
-There is no test suite, linter, or formatter configured — the code is pure bash. Validation is `bash -n` plus running `omarchy-hook theme-set` on a real Omarchy install.
+There is no test suite, linter, or formatter configured — the code is pure bash. Validation is `bash -n` plus running `omaniri-hook theme-set` on a real Omaniri install.
 
 ## Hardcoded URLs that must stay in sync
 

@@ -3,9 +3,9 @@ source "${THPM_THEME_ENV:-$HOME/.local/share/thpm/lib/theme-env.sh}"
 set -u
 
 LOG_FILE="/tmp/foot-theme-hook.log"
-FOOT_THEME_FILE="$HOME/.config/omarchy/current/theme/foot.ini"
+FOOT_THEME_FILE="$HOME/.config/omaniri/current/theme/foot.ini"
 FOOT_BASE_CONFIG="$HOME/.config/foot/foot.ini"
-OMARCHY_COLORS_FILE="$HOME/.config/omarchy/current/theme/colors.toml"
+OMANIRI_COLORS_FILE="$HOME/.config/omaniri/current/theme/colors.toml"
 ENABLED="${FOOT_LIVE_THEME:-1}"
 
 log() {
@@ -69,9 +69,9 @@ format_rgba_spec() {
   printf 'rgba:%s/%s/%s/%s' "${rgb_value:0:2}" "${rgb_value:2:2}" "${rgb_value:4:2}" "${alpha_hex:0:2}"
 }
 
-parse_omarchy_color() {
+parse_omaniri_color() {
   local key="$1"
-  local file_path="${2:-$OMARCHY_COLORS_FILE}"
+  local file_path="${2:-$OMANIRI_COLORS_FILE}"
   awk -F= -v wanted="$key" '
     $1 ~ /^[[:space:]]*#/ {
       next
@@ -147,11 +147,11 @@ load_color() {
 
   local parsed
   # Foot live updates should prefer the rendered Foot palette so existing
-  # terminals match new Foot windows even when Omarchy's template output
+  # terminals match new Foot windows even when Omaniri's template output
   # intentionally diverges from colors.toml for terminal-specific tuning.
   parsed="$(parse_foot_color "$foot_key")"
   if ! parsed="$(normalize_hex "$parsed" 2>/dev/null)"; then
-    parsed="$(parse_omarchy_color "$colors_key")"
+    parsed="$(parse_omaniri_color "$colors_key")"
   fi
   parsed="${parsed#\#}"
   parsed="${parsed%% *}"
@@ -271,7 +271,7 @@ for idx in $(seq 0 15); do
   if ! value="$(normalize_hex "$value" 2>/dev/null)"; then
     parsed="$(parse_foot_color "$foot_key")"
     if ! value="$(normalize_hex "$parsed" 2>/dev/null)"; then
-      parsed="$(parse_omarchy_color "color$idx")"
+      parsed="$(parse_omaniri_color "color$idx")"
       parsed="${parsed#\#}"
       parsed="${parsed%% *}"
       if value="$(normalize_hex "$parsed" 2>/dev/null)"; then

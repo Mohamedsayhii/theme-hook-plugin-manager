@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 source "${THPM_THEME_ENV:-$HOME/.local/share/thpm/lib/theme-env.sh}"
 
-output_file="$HOME/.config/omarchy/current/theme/superfile.toml"
+output_file="$HOME/.config/omaniri/current/theme/superfile.toml"
 
 if ! command -v spf >/dev/null 2>&1; then
     skipped "Superfile"
@@ -64,7 +64,7 @@ EOF
 fi
 
 mkdir -p "$HOME/.config/superfile/theme/"
-cp -p -f "$output_file" "$HOME/.config/superfile/theme/omarchy.toml"
+cp -p -f "$output_file" "$HOME/.config/superfile/theme/omaniri.toml"
 
 require_restart "spf"
 success "Superfile theme updated!"

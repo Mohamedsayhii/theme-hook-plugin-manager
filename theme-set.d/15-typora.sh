@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 source "${THPM_THEME_ENV:-$HOME/.local/share/thpm/lib/theme-env.sh}"
 
-# Typora theme hook - generates CSS with current omarchy theme colors
+# Typora theme hook - generates CSS with current omaniri theme colors
 
-new_typora_file="$HOME/.config/omarchy/current/theme/typora.css"
+new_typora_file="$HOME/.config/omaniri/current/theme/typora.css"
 typora_dir="$HOME/.config/Typora/themes"
 
 create_dynamic_theme() {
@@ -172,10 +172,10 @@ fi
 mkdir -p "$typora_dir"
 
 if [ -f "$new_typora_file" ]; then
-    cp -f "$new_typora_file" "$typora_dir/omarchy.css"
+    cp -f "$new_typora_file" "$typora_dir/omaniri.css"
 else
     create_dynamic_theme
-    cp -f "$new_typora_file" "$typora_dir/omarchy.css"
+    cp -f "$new_typora_file" "$typora_dir/omaniri.css"
 fi
 
 success "Typora theme updated!"

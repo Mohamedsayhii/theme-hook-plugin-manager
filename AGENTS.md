@@ -2,14 +2,14 @@
 
 ## Project Structure & Module Organization
 
-This repository is a small shell-based Omarchy plugin manager.
+This repository is a small shell-based Omaniri plugin manager.
 
 - `thpm` is the user-facing CLI for listing, enabling, disabling, running, updating, and uninstalling plugins.
 - `install.sh` and `uninstall.sh` manage installation, bundled hooks, and cleanup.
 - `theme-set` is a compatibility shim for older installs.
-- `lib/theme-env.sh` loads Omarchy `colors.toml` values and shared helper functions.
+- `lib/theme-env.sh` loads Omaniri `colors.toml` values and shared helper functions.
 - `theme-set.d/*.sh` contains bundled app plugins. Use numeric prefixes, for example `40-firefox.sh`.
-- `tests/run.sh` is the test harness. `tests/omarchy-defaults.contract` records Omarchy path assumptions.
+- `tests/run.sh` is the test harness. `tests/omaniri-defaults.contract` records Omaniri path assumptions.
 - `docs/plugins.md` documents the plugin API and authoring expectations.
 
 ## Build, Test, and Development Commands
@@ -48,15 +48,15 @@ Always run `bash tests/run.sh` before committing.
 
 ## Commit & Pull Request Guidelines
 
-Recent commits use concise imperative subjects, sometimes with a `fix:` prefix, for example `Harden hook plugin portability` or `fix: change Omarchyy to Omarchy`.
+Recent commits use concise imperative subjects, sometimes with a `fix:` prefix, for example `Harden hook plugin portability` or `fix: change Omaniriy to Omaniri`.
 
 Pull requests should include:
 
 - A short summary of user-visible behavior.
 - Tests run, especially `bash tests/run.sh`.
-- Any changed Omarchy assumptions, plugin paths, or new external command dependencies.
+- Any changed Omaniri assumptions, plugin paths, or new external command dependencies.
 - README or `docs/plugins.md` updates for new plugins or setup requirements.
 
-## Omarchy Compatibility Notes
+## Omaniri Compatibility Notes
 
-Theme data must come from `~/.config/omarchy/current/theme/colors.toml`. Do not treat generated app theme files as source of truth. If Omarchy defaults change, update `tests/omarchy-defaults.contract` and the related tests with the code change.
+Theme data must come from `~/.config/omaniri/current/theme/colors.toml`. Do not treat generated app theme files as source of truth. If Omaniri defaults change, update `tests/omaniri-defaults.contract` and the related tests with the code change.

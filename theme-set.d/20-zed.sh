@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 source "${THPM_THEME_ENV:-$HOME/.local/share/thpm/lib/theme-env.sh}"
 
-new_zed_file="$HOME/.config/omarchy/current/theme/zed.json"
+new_zed_file="$HOME/.config/omaniri/current/theme/zed.json"
 
 create_dynamic_theme() {
 cat > "$new_zed_file" << EOF
     {
       "\$schema": "https://zed.dev/schema/themes/v0.1.0.json",
-      "name": "Omarchy",
+      "name": "Omaniri",
       "author": "@bypass_",
       "themes": [
         {
-          "name": "Omarchy",
+          "name": "Omaniri",
           "appearance": "dark",
           "style": {
             "background": "#${primary_background}90",
@@ -119,10 +119,10 @@ fi
 
 mkdir -p "$HOME/.config/zed/themes"
 if [ -f "$new_zed_file" ]; then
-    cp -f "$new_zed_file" "$HOME/.config/zed/themes/omarchy.json"
+    cp -f "$new_zed_file" "$HOME/.config/zed/themes/omaniri.json"
 else
     create_dynamic_theme
-    cp -f "$new_zed_file" "$HOME/.config/zed/themes/omarchy.json"
+    cp -f "$new_zed_file" "$HOME/.config/zed/themes/omaniri.json"
 fi
 
 success "Zed theme updated!"

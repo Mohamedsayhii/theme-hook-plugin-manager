@@ -109,12 +109,12 @@ plugin_was_enabled() {
     return 1
 }
 
-if [[ -d "$HOME/.config/omarchy/hooks/theme-set.d" ]]; then
-    for plugin in "$HOME"/.config/omarchy/hooks/theme-set.d/*.sh; do
+if [[ -d "$HOME/.config/omaniri/hooks/theme-set.d" ]]; then
+    for plugin in "$HOME"/.config/omaniri/hooks/theme-set.d/*.sh; do
         [[ -f "$plugin" ]] || continue
         record_enabled_plugin "$plugin"
     done
-    for plugin in "$HOME"/.config/omarchy/hooks/theme-set.d/*.sh.sample; do
+    for plugin in "$HOME"/.config/omaniri/hooks/theme-set.d/*.sh.sample; do
         [[ -f "$plugin" ]] || continue
         record_disabled_plugin "$plugin"
     done
@@ -132,9 +132,9 @@ git clone --branch "$THPM_BRANCH" --depth 1 https://github.com/OldJobobo/theme-h
 install_commit=$(git -C /tmp/theme-hook rev-parse HEAD 2>/dev/null || true)
 
 # Remove legacy aliases from previous installs
-rm -f "$HOME/.local/share/omarchy/bin/theme-hook-update" > /dev/null 2>&1
-rm -f "$HOME/.local/share/omarchy/bin/thctl" > /dev/null 2>&1
-rm -f "$HOME/.local/share/omarchy/bin/thpm" > /dev/null 2>&1
+rm -f "$HOME/.local/share/omaniri/bin/theme-hook-update" > /dev/null 2>&1
+rm -f "$HOME/.local/share/omaniri/bin/thctl" > /dev/null 2>&1
+rm -f "$HOME/.local/share/omaniri/bin/thpm" > /dev/null 2>&1
 
 # Install the thpm CLI
 mkdir -p "$HOME/.local/bin"
@@ -161,10 +161,10 @@ mkdir -p "$THPM_CONFIG_HOME/thpm"
 if [[ ! -f "$THPM_CONFIG_HOME/thpm/config.toml" ]]; then
     cat > "$THPM_CONFIG_HOME/thpm/config.toml" <<'EOF'
 [paths]
-hook_dir = "~/.config/omarchy/hooks/theme-set.d"
+hook_dir = "~/.config/omaniri/hooks/theme-set.d"
 state_dir = "~/.local/share/thpm"
 theme_env = "~/.local/share/thpm/lib/theme-env.sh"
-colors_file = "~/.config/omarchy/current/theme/colors.toml"
+colors_file = "~/.config/omaniri/current/theme/colors.toml"
 skills_dir = "~/.local/share/thpm/skills"
 
 [updates]
@@ -197,15 +197,15 @@ spf = true
 EOF
 fi
 
-# Remove the old thpm dispatcher if this install previously owned it. Omarchy
+# Remove the old thpm dispatcher if this install previously owned it. Omaniri
 # now runs theme-set.d hooks directly, so no dispatcher is needed.
-if [[ -f "$HOME/.config/omarchy/hooks/theme-set" ]] && grep -Eq 'Omarchy 3\.3\+ uses colors\.toml|Compatibility shim for older thpm installs' "$HOME/.config/omarchy/hooks/theme-set"; then
-    rm -f "$HOME/.config/omarchy/hooks/theme-set"
+if [[ -f "$HOME/.config/omaniri/hooks/theme-set" ]] && grep -Eq 'Omaniri 3\.3\+ uses colors\.toml|Compatibility shim for older thpm installs' "$HOME/.config/omaniri/hooks/theme-set"; then
+    rm -f "$HOME/.config/omaniri/hooks/theme-set"
 fi
 
-# Create Omarchy theme hook directory and copy native hook scripts
-mkdir -p "$HOME/.config/omarchy/hooks/theme-set.d/"
-mv -f /tmp/theme-hook/theme-set.d/* "$HOME/.config/omarchy/hooks/theme-set.d/"
+# Create Omaniri theme hook directory and copy native hook scripts
+mkdir -p "$HOME/.config/omaniri/hooks/theme-set.d/"
+mv -f /tmp/theme-hook/theme-set.d/* "$HOME/.config/omaniri/hooks/theme-set.d/"
 
 # Remove any new temp files
 rm -rf /tmp/theme-hook
@@ -213,31 +213,31 @@ rm -rf /tmp/theme-hook
 # Update permissions
 chmod 644 "$HOME/.local/share/thpm/lib/theme-env.sh"
 for plugin in "${bundled_plugins[@]}"; do
-    [[ -f "$HOME/.config/omarchy/hooks/theme-set.d/$plugin" ]] && chmod 644 "$HOME/.config/omarchy/hooks/theme-set.d/$plugin"
-    [[ -f "$HOME/.config/omarchy/hooks/theme-set.d/$plugin.sample" ]] && chmod 644 "$HOME/.config/omarchy/hooks/theme-set.d/$plugin.sample"
+    [[ -f "$HOME/.config/omaniri/hooks/theme-set.d/$plugin" ]] && chmod 644 "$HOME/.config/omaniri/hooks/theme-set.d/$plugin"
+    [[ -f "$HOME/.config/omaniri/hooks/theme-set.d/$plugin.sample" ]] && chmod 644 "$HOME/.config/omaniri/hooks/theme-set.d/$plugin.sample"
 done
 
 if [[ "$recover_all_disabled" -eq 1 ]]; then
     for plugin in "${bundled_plugins[@]}"; do
-        rm -f "$HOME/.config/omarchy/hooks/theme-set.d/$plugin.sample"
+        rm -f "$HOME/.config/omaniri/hooks/theme-set.d/$plugin.sample"
     done
 fi
 
 for plugin in "${default_disabled_plugins[@]}"; do
     plugin_was_enabled "$plugin" && continue
-    if [[ -f "$HOME/.config/omarchy/hooks/theme-set.d/$plugin" ]]; then
-        mv -f "$HOME/.config/omarchy/hooks/theme-set.d/$plugin" "$HOME/.config/omarchy/hooks/theme-set.d/$plugin.sample"
+    if [[ -f "$HOME/.config/omaniri/hooks/theme-set.d/$plugin" ]]; then
+        mv -f "$HOME/.config/omaniri/hooks/theme-set.d/$plugin" "$HOME/.config/omaniri/hooks/theme-set.d/$plugin.sample"
     fi
 done
 
 for plugin in "${disabled_plugins[@]}"; do
-    if [[ -f "$HOME/.config/omarchy/hooks/theme-set.d/$plugin" ]]; then
-        mv -f "$HOME/.config/omarchy/hooks/theme-set.d/$plugin" "$HOME/.config/omarchy/hooks/theme-set.d/$plugin.sample"
+    if [[ -f "$HOME/.config/omaniri/hooks/theme-set.d/$plugin" ]]; then
+        mv -f "$HOME/.config/omaniri/hooks/theme-set.d/$plugin" "$HOME/.config/omaniri/hooks/theme-set.d/$plugin.sample"
     fi
 done
 
 # Run the theme-set hook to apply the current theme
 echo "Running theme-set hook.."
-omarchy-hook theme-set
+omaniri-hook theme-set
 
-omarchy-show-done
+omaniri-show-done

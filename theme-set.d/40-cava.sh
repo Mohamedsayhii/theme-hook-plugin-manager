@@ -5,7 +5,7 @@ if ! command -v cava >/dev/null 2>&1; then
     skipped "Cava"
 fi
 
-theme_template="$HOME/.config/omarchy/current/theme/cava_theme"
+theme_template="$HOME/.config/omaniri/current/theme/cava_theme"
 
 if [ ! -f "$theme_template" ]; then
 cat > "$theme_template" << EOF
@@ -25,11 +25,11 @@ fi
 
 theme_dir="$HOME/.config/cava/themes"
 mkdir -p "$theme_dir"
-cp -f "$theme_template" "$theme_dir/omarchy"
+cp -f "$theme_template" "$theme_dir/omaniri"
 
 config_file="$HOME/.config/cava/config"
-if [ -f "$config_file" ] && ! grep -q "theme = 'omarchy'" "$config_file"; then
-    sed -i "/^\[color\]/a theme = 'omarchy'" "$config_file"
+if [ -f "$config_file" ] && ! grep -q "theme = 'omaniri'" "$config_file"; then
+    sed -i "/^\[color\]/a theme = 'omaniri'" "$config_file"
 fi
 
 if pgrep -x cava >/dev/null 2>&1; then

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source "${THPM_THEME_ENV:-$HOME/.local/share/thpm/lib/theme-env.sh}"
-# Update Obsidian Terminal plugin xterm.js theme colors on Omarchy theme switch.
+# Update Obsidian Terminal plugin xterm.js theme colors on Omaniri theme switch.
 # Reads color vars exported by the parent theme-set hook (no # prefix).
 
 if [[ -z "${primary_background:-}" || -z "${primary_foreground:-}" ]]; then

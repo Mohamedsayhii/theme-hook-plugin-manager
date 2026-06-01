@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 source "${THPM_THEME_ENV:-$HOME/.local/share/thpm/lib/theme-env.sh}"
 
-output_file="$HOME/.config/omarchy/current/theme/vencord.theme.css"
+output_file="$HOME/.config/omaniri/current/theme/vencord.theme.css"
 possible_paths=(
     "$HOME/.config/Vencord/themes"
     "$HOME/.config/vesktop/themes"
@@ -22,7 +22,7 @@ cat > "$output_file" << EOF
     * @description Match your current system theme.
     * @source https://github.com/imbypass/base16-Discord
     **/
-    @import url("https://imbypass.github.io/base16-discord/omarchy-discord.theme.css");
+    @import url("https://imbypass.github.io/base16-discord/omaniri-discord.theme.css");
 
     :root {
         --color00: #${primary_background};
@@ -62,13 +62,13 @@ EOF
 }
 
 check_for_theme() {
-    if [[ -f $HOME/.config/omarchy/current/theme/vencord.theme.css ]]; then
+    if [[ -f $HOME/.config/omaniri/current/theme/vencord.theme.css ]]; then
         for path in "${possible_paths[@]}"; do
             if [ -d "$path" ]; then
                 if [[ -f "$path/vencord.theme.css" ]]; then
                     rm "$path/vencord.theme.css"
                 fi
-                cp -f "$HOME/.config/omarchy/current/theme/vencord.theme.css" "$path/vencord.theme.css"
+                cp -f "$HOME/.config/omaniri/current/theme/vencord.theme.css" "$path/vencord.theme.css"
             fi
 
             for file in "$path"/*; do

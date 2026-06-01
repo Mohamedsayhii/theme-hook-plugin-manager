@@ -2,8 +2,8 @@
 source "${THPM_THEME_ENV:-$HOME/.local/share/thpm/lib/theme-env.sh}"
 
 create_spicetify_styling() {
-    mkdir -p "$HOME/.config/spicetify/Themes/omarchy"
-cat > "$HOME/.config/spicetify/Themes/omarchy/user.css" << EOF
+    mkdir -p "$HOME/.config/spicetify/Themes/omaniri"
+cat > "$HOME/.config/spicetify/Themes/omaniri/user.css" << EOF
 :root,
 .encore-dark-theme,
 .encore-base-set,
@@ -33,7 +33,7 @@ EOF
 }
 
 change_spicetify_theme() {
-    spicetify config current_theme omarchy > /dev/null
+    spicetify config current_theme omaniri > /dev/null
     spicetify config color_scheme base > /dev/null
 }
 
@@ -55,7 +55,7 @@ create_dynamic_theme() {
     color0E=${normal_magenta}
     color0F=${bright_red}
 
-cat > "$HOME/.config/spicetify/Themes/omarchy/color.ini" << EOF
+cat > "$HOME/.config/spicetify/Themes/omaniri/color.ini" << EOF
 [base]
 main                = ${color00}
 player              = ${color00}

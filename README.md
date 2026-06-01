@@ -2,33 +2,33 @@
 
 # Theme Hook Plugin Manager
 
-**A small manager for Omarchy theme-change plugins.**
+**A small manager for Omaniri theme-change plugins.**
 
-`thpm` installs and manages native Omarchy `theme-set.d` hook plugins. Omarchy runs the enabled hooks when the theme changes.
+`thpm` installs and manages native Omaniri `theme-set.d` hook plugins. Omaniri runs the enabled hooks when the theme changes.
 
 </div>
 
-> **Independent project.** Theme Hook Plugin Manager is built for Omarchy users, but it is not affiliated with Omarchy.
+> **Independent project.** Theme Hook Plugin Manager is built for Omaniri users, but it is not affiliated with Omaniri.
 
 ## Overview
 
-Omarchy runs `theme-set.d` hooks when the active theme changes. `thpm` manages those hook files as plugins: install them, list them, enable or disable them, and update them. When you run `thpm run`, it asks Omarchy to fire the `theme-set` hook; `thpm` does not dispatch plugin scripts itself.
+Omaniri runs `theme-set.d` hooks when the active theme changes. `thpm` manages those hook files as plugins: install them, list them, enable or disable them, and update them. When you run `thpm run`, it asks Omaniri to fire the `theme-set` hook; `thpm` does not dispatch plugin scripts itself.
 
-Most bundled plugins translate Omarchy theme data into app-specific config files, CSS files, editor themes, or live reload actions. The same plugin model can also handle other theme-change tasks, such as restarting a helper process, syncing generated files, or adapting app-specific settings.
+Most bundled plugins translate Omaniri theme data into app-specific config files, CSS files, editor themes, or live reload actions. The same plugin model can also handle other theme-change tasks, such as restarting a helper process, syncing generated files, or adapting app-specific settings.
 
-Color-focused plugins read the active Omarchy theme from:
+Color-focused plugins read the active Omaniri theme from:
 
 ```text
-~/.config/omarchy/current/theme/colors.toml
+~/.config/omaniri/current/theme/colors.toml
 ```
 
 Each integration is a normal shell plugin in:
 
 ```text
-~/.config/omarchy/hooks/theme-set.d/
+~/.config/omaniri/hooks/theme-set.d/
 ```
 
-Enabled plugins end in `.sh`. Disabled plugins end in `.sh.sample`. Omarchy runs enabled hooks directly when the `theme-set` hook fires.
+Enabled plugins end in `.sh`. Disabled plugins end in `.sh.sample`. Omaniri runs enabled hooks directly when the `theme-set` hook fires.
 
 ## Install
 
@@ -39,29 +39,29 @@ curl -fsSL https://raw.githubusercontent.com/OldJobobo/theme-hook-plugin-manager
 The installer:
 
 - installs the `thpm` CLI
-- installs bundled plugins into Omarchy's hook directory
+- installs bundled plugins into Omaniri's hook directory
 - preserves disabled bundled plugins as `.sample`
 - keeps custom user hooks in place
 - applies the current theme once setup finishes
 
 ### GTK Dependency
 
-The GTK plugin uses Omarchy's Adwaita-compatible GTK package:
+The GTK plugin uses Omaniri's Adwaita-compatible GTK package:
 
 ```bash
-omarchy-pkg-add adw-gtk-theme
+omaniri-pkg-add adw-gtk-theme
 ```
 
 The installer checks for `adw-gtk-theme` and can prompt to install it.
 
 ## Requirements
 
-- Omarchy
-- An Omarchy 3.3+ compatible theme with `colors.toml` for color-based plugins
+- Omaniri
+- An Omaniri 3.3+ compatible theme with `colors.toml` for color-based plugins
 - Bash and standard Unix command-line tools
 - Target apps installed for the plugins you enable
 
-Some apps also require one-time selection of the generated Omarchy theme inside their own settings.
+Some apps also require one-time selection of the generated Omaniri theme inside their own settings.
 
 ## Supported Plugins
 
@@ -69,26 +69,26 @@ Some apps also require one-time selection of the generated Omarchy theme inside 
 
 **Editors and writing:** Cursor, Obsidian Terminal plugin, Typora, VS Code, Windsurf, Zed
 
-**Desktop and UI:** Discord clients using Vencord-compatible themes, optional Discord System24 theme, GTK apps, nwg-dock-hyprland, Omarchy branding, Qt6 apps using qt6ct, SwayNC, Vicinae
+**Desktop and UI:** Discord clients using Vencord-compatible themes, optional Discord System24 theme, GTK apps, nwg-dock-hyprland, Omaniri branding, Qt6 apps using qt6ct, SwayNC, Vicinae
 
 **Terminal and CLI:** cliamp, Cava, Fish, Foot live colors, fzf, Superfile, tmux
 
 **Games and media:** Heroic Games Launcher, Spotify using Spicetify, Steam
 
-### Omarchy Branding
+### Omaniri Branding
 
-The branding plugin is installed disabled by default. Enable it with `thpm enable branding` when you want themes to manage Omarchy's Fastfetch/About and screensaver logos.
+The branding plugin is installed disabled by default. Enable it with `thpm enable branding` when you want themes to manage Omaniri's Fastfetch/About and screensaver logos.
 
-Once enabled, it syncs active-theme text logos into Omarchy's user branding files:
+Once enabled, it syncs active-theme text logos into Omaniri's user branding files:
 
 ```text
-~/.config/omarchy/current/theme/about.txt
-~/.config/omarchy/current/theme/screensaver.txt
+~/.config/omaniri/current/theme/about.txt
+~/.config/omaniri/current/theme/screensaver.txt
 ```
 
-When present, those files are copied to `~/.config/omarchy/branding/about.txt` for Fastfetch/About and `~/.config/omarchy/branding/screensaver.txt` for the screensaver. Missing theme branding files leave the existing user branding unchanged.
+When present, those files are copied to `~/.config/omaniri/branding/about.txt` for Fastfetch/About and `~/.config/omaniri/branding/screensaver.txt` for the screensaver. Missing theme branding files leave the existing user branding unchanged.
 
-`thpm disable branding` stops future syncs but does not restore or delete the current branding. `thpm remove` restores Omarchy's current source defaults from `~/.local/share/omarchy/icon.txt` and `~/.local/share/omarchy/logo.txt`.
+`thpm disable branding` stops future syncs but does not restore or delete the current branding. `thpm remove` restores Omaniri's current source defaults from `~/.local/share/omaniri/icon.txt` and `~/.local/share/omaniri/logo.txt`.
 
 ## Commands
 
@@ -110,7 +110,7 @@ thpm remove
 | `thpm enable <name>` | Enable a plugin |
 | `thpm disable <name>` | Disable a plugin |
 | `thpm doctor [name]` | Diagnose thpm setup and plugin theming issues |
-| `thpm run` | Ask Omarchy to fire the `theme-set` hook now |
+| `thpm run` | Ask Omaniri to fire the `theme-set` hook now |
 | `thpm install skills` | Install a bundled agent skill, currently for Codex/OpenAI |
 | `thpm open` | Open the plugin directory |
 | `thpm update` | Re-run the installer |
@@ -132,10 +132,10 @@ Example:
 
 ```toml
 [paths]
-hook_dir = "~/.config/omarchy/hooks/theme-set.d"
+hook_dir = "~/.config/omaniri/hooks/theme-set.d"
 state_dir = "~/.local/share/thpm"
 theme_env = "~/.local/share/thpm/lib/theme-env.sh"
-colors_file = "~/.config/omarchy/current/theme/colors.toml"
+colors_file = "~/.config/omaniri/current/theme/colors.toml"
 skills_dir = "~/.local/share/thpm/skills"
 
 [updates]
@@ -174,7 +174,7 @@ Restart notification app keys match the process name passed by a plugin to `requ
 Put custom plugins in:
 
 ```text
-~/.config/omarchy/hooks/theme-set.d/
+~/.config/omaniri/hooks/theme-set.d/
 ```
 
 Use a numeric prefix for predictable ordering:
@@ -213,7 +213,7 @@ Or run:
 curl -fsSL https://raw.githubusercontent.com/OldJobobo/theme-hook-plugin-manager/thpm/uninstall.sh | bash
 ```
 
-The uninstaller removes `thpm`, bundled plugins, the shared runtime, and generated integration files it knows how to clean up. Custom Omarchy hooks are preserved. Omarchy branding is restored from the current Omarchy source defaults when those default files are available.
+The uninstaller removes `thpm`, bundled plugins, the shared runtime, and generated integration files it knows how to clean up. Custom Omaniri hooks are preserved. Omaniri branding is restored from the current Omaniri source defaults when those default files are available.
 
 ## Troubleshooting
 
@@ -237,20 +237,20 @@ Check that the plugin is enabled:
 thpm list
 ```
 
-Then ask Omarchy to reapply the theme hook:
+Then ask Omaniri to reapply the theme hook:
 
 ```bash
 thpm run
 ```
 
-Some apps require selecting the generated Omarchy theme in their own settings.
+Some apps require selecting the generated Omaniri theme in their own settings.
 
 ### `colors.toml not found`
 
-Use an Omarchy 3.3+ compatible theme. `thpm` reads:
+Use an Omaniri 3.3+ compatible theme. `thpm` reads:
 
 ```text
-~/.config/omarchy/current/theme/colors.toml
+~/.config/omaniri/current/theme/colors.toml
 ```
 
 Generated terminal or app theme files are not treated as the source of truth.
@@ -297,7 +297,7 @@ OBSIDIAN_TERMINAL_DATA_JSON="$HOME/path/to/vault/.obsidian/plugins/terminal/data
 
 ### Old hook errors after updating
 
-Current plugins are native Omarchy `theme-set.d` hooks and source `~/.local/share/thpm/lib/theme-env.sh`. If logs mention older dispatcher behavior, update `thpm` and remove stale custom copies of old bundled hooks.
+Current plugins are native Omaniri `theme-set.d` hooks and source `~/.local/share/thpm/lib/theme-env.sh`. If logs mention older dispatcher behavior, update `thpm` and remove stale custom copies of old bundled hooks.
 
 ## Development
 
@@ -311,4 +311,4 @@ Contributor notes live in [AGENTS.md](AGENTS.md), and plugin authoring details l
 
 ## Attribution
 
-Theme Hook Plugin Manager is an independent Omarchy-focused project. Earlier work in this space includes [imbypass/omarchy-theme-hook](https://github.com/imbypass/omarchy-theme-hook), credited here for project history.
+Theme Hook Plugin Manager is an independent Omaniri-focused project. Earlier work in this space includes [imbypass/omaniri-theme-hook](https://github.com/imbypass/omaniri-theme-hook), credited here for project history.

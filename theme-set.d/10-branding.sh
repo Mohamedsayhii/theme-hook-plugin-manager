@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 source "${THPM_THEME_ENV:-$HOME/.local/share/thpm/lib/theme-env.sh}"
 
-theme_dir="$HOME/.config/omarchy/current/theme"
-branding_dir="$HOME/.config/omarchy/branding"
+theme_dir="$HOME/.config/omaniri/current/theme"
+branding_dir="$HOME/.config/omaniri/branding"
 updated=0
 
 copy_branding_file() {
@@ -20,7 +20,7 @@ copy_branding_file "$theme_dir/about.txt" "$branding_dir/about.txt" || true
 copy_branding_file "$theme_dir/screensaver.txt" "$branding_dir/screensaver.txt" || true
 
 if [[ "$updated" -eq 0 ]]; then
-    skipped "Omarchy branding"
+    skipped "Omaniri branding"
 fi
 
-success "Omarchy branding updated!"
+success "Omaniri branding updated!"

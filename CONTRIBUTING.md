@@ -9,7 +9,7 @@ The project is intentionally small: shell scripts, app plugins, and user-facing 
 - New app plugins
 - Fixes for existing app plugins
 - Better setup or troubleshooting documentation
-- Compatibility updates for current Omarchy themes
+- Compatibility updates for current Omaniri themes
 - Small CLI improvements that keep `thpm` simple
 
 ## Plugin Contributions
@@ -38,7 +38,7 @@ Before opening a pull request, run the test suite:
 tests/run.sh
 ```
 
-If you can test on Omarchy, also run:
+If you can test on Omaniri, also run:
 
 ```bash
 thpm run
@@ -47,7 +47,7 @@ thpm run
 or:
 
 ```bash
-omarchy-hook theme-set
+omaniri-hook theme-set
 ```
 
 ## Project Notes
@@ -55,7 +55,7 @@ omarchy-hook theme-set
 Theme colors come from:
 
 ```text
-~/.config/omarchy/current/theme/colors.toml
+~/.config/omaniri/current/theme/colors.toml
 ```
 
 Do not add new integrations that read generated terminal theme files as the source of truth.
@@ -64,4 +64,4 @@ User-facing language should use "plugin" rather than older hook-specific terms.
 
 ## Credits
 
-This project is based on [imbypass/omarchy-theme-hook](https://github.com/imbypass/omarchy-theme-hook). Keep attribution intact when reusing or adapting existing plugin work.
+This project is based on [imbypass/omaniri-theme-hook](https://github.com/imbypass/omaniri-theme-hook). Keep attribution intact when reusing or adapting existing plugin work.

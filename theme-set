@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
 # Compatibility shim for older thpm installs.
-# Current Omarchy runs ~/.config/omarchy/hooks/theme-set.d/* directly, and
+# Current Omaniri runs ~/.config/omaniri/hooks/theme-set.d/* directly, and
 # bundled thpm plugins source ~/.local/share/thpm/lib/theme-env.sh themselves.
 exit 0

@@ -5,7 +5,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TMP_ROOT="$(mktemp -d)"
 TEST_FAILURES=0
 TEST_ASSERTIONS=0
-OMARCHY_CONTRACT_FILE="$ROOT_DIR/tests/omarchy-defaults.contract"
+OMANIRI_CONTRACT_FILE="$ROOT_DIR/tests/omaniri-defaults.contract"
 
 unset XDG_CONFIG_HOME
 unset THPM_CONFIG_FILE
@@ -130,12 +130,12 @@ assert_file_not_executable() {
 
 contract_value() {
   local key="$1"
-  awk -F= -v key="$key" '$1 == key { print substr($0, index($0, "=") + 1); exit }' "$OMARCHY_CONTRACT_FILE"
+  awk -F= -v key="$key" '$1 == key { print substr($0, index($0, "=") + 1); exit }' "$OMANIRI_CONTRACT_FILE"
 }
 
 write_colors_fixture() {
   local home_dir="$1"
-  local theme_dir="$home_dir/.config/omarchy/current/theme"
+  local theme_dir="$home_dir/.config/omaniri/current/theme"
 
   mkdir -p "$theme_dir"
   cat > "$theme_dir/colors.toml" <<'EOF'
@@ -231,9 +231,9 @@ run_theme_hooks() {
   shift || true
 
   HOME="$home_dir" "$ROOT_DIR/theme-set" "$@"
-  if [[ -d "$home_dir/.config/omarchy/hooks/theme-set.d" ]]; then
+  if [[ -d "$home_dir/.config/omaniri/hooks/theme-set.d" ]]; then
     local hook
-    for hook in "$home_dir"/.config/omarchy/hooks/theme-set.d/*; do
+    for hook in "$home_dir"/.config/omaniri/hooks/theme-set.d/*; do
       [[ -f "$hook" ]] || continue
       [[ "$hook" == *.sample ]] && continue
       THPM_THEME_ENV="$ROOT_DIR/lib/theme-env.sh" HOME="$home_dir" bash "$hook" "$@" || echo "Hook failed: $hook"
@@ -284,7 +284,7 @@ test_installer_bundled_plugin_inventory_matches_hooks() {
   assert_eq "$actual" "$declared" "install bundled plugin inventory matches theme-set.d hooks"
 }
 
-test_project_omarchy_default_contract() {
+test_project_omaniri_default_contract() {
   local hook_dir
   local theme_dir
   local colors_file
@@ -307,27 +307,27 @@ test_project_omarchy_default_contract() {
   legacy_bin_dir="$(contract_value LEGACY_BIN_DIR)"
   shared_runtime="$(contract_value SHARED_RUNTIME)"
 
-  assert_file_exists "$OMARCHY_CONTRACT_FILE" "Omarchy defaults contract file exists"
-  assert_contains "$(cat "$ROOT_DIR/thpm")" "thpm_config_path paths hook_dir \"\$HOME/$hook_dir\"" "thpm default hook directory matches Omarchy contract"
-  assert_contains "$(cat "$ROOT_DIR/thpm")" "omarchy-hook \"$hook_name\"" "thpm run invokes contracted Omarchy hook"
-  assert_contains "$(cat "$ROOT_DIR/install.sh")" "\$HOME/$hook_dir" "install writes hooks to contracted Omarchy hook directory"
-  assert_contains "$(cat "$ROOT_DIR/install.sh")" "omarchy-hook $hook_name" "install reapplies contracted Omarchy hook"
+  assert_file_exists "$OMANIRI_CONTRACT_FILE" "Omaniri defaults contract file exists"
+  assert_contains "$(cat "$ROOT_DIR/thpm")" "thpm_config_path paths hook_dir \"\$HOME/$hook_dir\"" "thpm default hook directory matches Omaniri contract"
+  assert_contains "$(cat "$ROOT_DIR/thpm")" "omaniri-hook \"$hook_name\"" "thpm run invokes contracted Omaniri hook"
+  assert_contains "$(cat "$ROOT_DIR/install.sh")" "\$HOME/$hook_dir" "install writes hooks to contracted Omaniri hook directory"
+  assert_contains "$(cat "$ROOT_DIR/install.sh")" "omaniri-hook $hook_name" "install reapplies contracted Omaniri hook"
   assert_contains "$(cat "$ROOT_DIR/install.sh")" "\$HOME/$legacy_dispatcher" "install only targets contracted legacy dispatcher path"
   assert_contains "$(cat "$ROOT_DIR/install.sh")" "\$HOME/$legacy_bin_dir/thpm" "install removes contracted legacy thpm bin path"
-  assert_contains "$(cat "$ROOT_DIR/uninstall.sh")" "\$HOME/$hook_dir" "uninstall removes hooks from contracted Omarchy hook directory"
+  assert_contains "$(cat "$ROOT_DIR/uninstall.sh")" "\$HOME/$hook_dir" "uninstall removes hooks from contracted Omaniri hook directory"
   assert_contains "$(cat "$ROOT_DIR/uninstall.sh")" "\$HOME/$legacy_dispatcher" "uninstall removes contracted legacy dispatcher path"
   assert_contains "$(cat "$ROOT_DIR/uninstall.sh")" "\$HOME/$legacy_bin_dir/thpm" "uninstall removes contracted legacy thpm bin path"
-  assert_contains "$(cat "$ROOT_DIR/lib/theme-env.sh")" "\$HOME/$colors_file" "theme env reads contracted Omarchy colors file"
-  assert_contains "$(cat "$ROOT_DIR/theme-set")" "$hook_dir/* directly" "compatibility shim documents direct Omarchy hook execution"
-  assert_contains "$(cat "$ROOT_DIR/docs/plugins.md")" "~/$hook_dir/" "plugin docs show contracted Omarchy hook directory"
-  assert_contains "$(cat "$ROOT_DIR/docs/plugins.md")" "~/$colors_file" "plugin docs show contracted Omarchy colors file"
-  assert_contains "$(cat "$ROOT_DIR/README.md")" "~/$hook_dir/" "README shows contracted Omarchy hook directory"
-  assert_contains "$(cat "$ROOT_DIR/README.md")" "native Omarchy \`$hook_name.d\` hooks" "README documents direct Omarchy hook model"
-  assert_contains "$(cat "$ROOT_DIR/theme-set.d/10-gtk.sh")" "\$HOME/$light_mode_file" "GTK plugin uses contracted Omarchy light mode marker"
-  assert_contains "$(cat "$ROOT_DIR/theme-set.d/25-swaync.sh")" "\$HOME/$theme_name_file" "SwayNC plugin uses contracted Omarchy theme name file"
-  assert_contains "$(cat "$ROOT_DIR/theme-set.d/25-swaync.sh")" "\$HOME/$theme_store_dir" "SwayNC plugin uses contracted Omarchy theme store"
+  assert_contains "$(cat "$ROOT_DIR/lib/theme-env.sh")" "\$HOME/$colors_file" "theme env reads contracted Omaniri colors file"
+  assert_contains "$(cat "$ROOT_DIR/theme-set")" "$hook_dir/* directly" "compatibility shim documents direct Omaniri hook execution"
+  assert_contains "$(cat "$ROOT_DIR/docs/plugins.md")" "~/$hook_dir/" "plugin docs show contracted Omaniri hook directory"
+  assert_contains "$(cat "$ROOT_DIR/docs/plugins.md")" "~/$colors_file" "plugin docs show contracted Omaniri colors file"
+  assert_contains "$(cat "$ROOT_DIR/README.md")" "~/$hook_dir/" "README shows contracted Omaniri hook directory"
+  assert_contains "$(cat "$ROOT_DIR/README.md")" "native Omaniri \`$hook_name.d\` hooks" "README documents direct Omaniri hook model"
+  assert_contains "$(cat "$ROOT_DIR/theme-set.d/10-gtk.sh")" "\$HOME/$light_mode_file" "GTK plugin uses contracted Omaniri light mode marker"
+  assert_contains "$(cat "$ROOT_DIR/theme-set.d/25-swaync.sh")" "\$HOME/$theme_name_file" "SwayNC plugin uses contracted Omaniri theme name file"
+  assert_contains "$(cat "$ROOT_DIR/theme-set.d/25-swaync.sh")" "\$HOME/$theme_store_dir" "SwayNC plugin uses contracted Omaniri theme store"
   assert_contains "$(cat "$ROOT_DIR/theme-set.d/35-obsidian-terminal.sh")" "\${THPM_THEME_ENV:-\$HOME/$shared_runtime}" "direct-run plugin fallback uses contracted shared runtime"
-  assert_contains "$(cat "$ROOT_DIR/lib/theme-env.sh")" "Omarchy 3.3+" "theme env error explains contracted colors.toml-era Omarchy requirement"
+  assert_contains "$(cat "$ROOT_DIR/lib/theme-env.sh")" "Omaniri 3.3+" "theme env error explains contracted colors.toml-era Omaniri requirement"
 }
 
 test_thpm_help() {
@@ -391,7 +391,7 @@ test_thpm_install_skills_accepts_explicit_skill_and_agent() {
 
 test_thpm_enable_disable_and_list() {
   local home_dir="$TMP_ROOT/thpm-home"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local output
 
   mkdir -p "$hook_dir"
@@ -417,7 +417,7 @@ test_thpm_enable_disable_and_list() {
 
 test_thpm_manages_custom_hooks() {
   local home_dir="$TMP_ROOT/thpm-custom-home"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local output
 
   mkdir -p "$hook_dir"
@@ -481,7 +481,7 @@ EOF
 test_thpm_list_reports_available_update() {
   local home_dir="$TMP_ROOT/thpm-update-home"
   local bin_dir="$TMP_ROOT/thpm-update-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local version_file="$home_dir/.local/share/thpm/version"
   local output
 
@@ -536,12 +536,12 @@ EOF
 test_thpm_aliases() {
   local home_dir="$TMP_ROOT/alias-home"
   local bin_dir="$TMP_ROOT/alias-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local output
 
   mkdir -p "$hook_dir" "$bin_dir"
   printf '#!/usr/bin/env bash\n' > "$hook_dir/10-fzf.sh.sample"
-  make_stub_bin "$bin_dir" omarchy-hook 'printf "omarchy-hook %s\n" "$*"'
+  make_stub_bin "$bin_dir" omaniri-hook 'printf "omaniri-hook %s\n" "$*"'
   make_stub_bin "$bin_dir" curl 'printf "curl %s\n" "$*"'
 
   output="$(run_thpm "$home_dir" l)"
@@ -554,7 +554,7 @@ test_thpm_aliases() {
   assert_contains "$output" "Plugin Disabled: fzf" "thpm d aliases disable"
 
   output="$(run_thpm_with_path "$home_dir" "$bin_dir" r)"
-  assert_contains "$output" "omarchy-hook theme-set" "thpm r aliases run"
+  assert_contains "$output" "omaniri-hook theme-set" "thpm r aliases run"
 
   output="$(run_thpm_with_path "$home_dir" "$bin_dir" up)"
   assert_contains "$output" "raw.githubusercontent.com/OldJobobo/theme-hook-plugin-manager/thpm/install.sh" "thpm up aliases update"
@@ -566,12 +566,12 @@ test_thpm_aliases() {
 test_thpm_doctor_reports_missing_colors() {
   local home_dir="$TMP_ROOT/doctor-missing-colors-home"
   local bin_dir="$TMP_ROOT/doctor-missing-colors-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local output
   local status
 
   mkdir -p "$hook_dir" "$bin_dir"
-  make_stub_bin "$bin_dir" omarchy-hook 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-hook 'exit 0'
 
   set +e
   output="$(PATH="$bin_dir:$PATH" THPM_THEME_ENV="$ROOT_DIR/lib/theme-env.sh" HOME="$home_dir" "$ROOT_DIR/thpm" doctor 2>&1)"
@@ -586,14 +586,14 @@ test_thpm_doctor_reports_missing_colors() {
 test_thpm_doctor_warns_for_missing_plugin_command() {
   local home_dir="$TMP_ROOT/doctor-plugin-command-home"
   local bin_dir="$TMP_ROOT/doctor-plugin-command-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local output
   local status
 
   write_colors_fixture "$home_dir"
   mkdir -p "$hook_dir" "$bin_dir"
   printf '#!/usr/bin/env bash\nsource "${THPM_THEME_ENV:-$HOME/.local/share/thpm/lib/theme-env.sh}"\n' > "$hook_dir/10-spotify.sh"
-  make_stub_bin "$bin_dir" omarchy-hook 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-hook 'exit 0'
 
   set +e
   output="$(PATH="$bin_dir:$PATH" THPM_THEME_ENV="$ROOT_DIR/lib/theme-env.sh" HOME="$home_dir" "$ROOT_DIR/thpm" doctor 2>&1)"
@@ -609,14 +609,14 @@ test_thpm_doctor_warns_for_missing_plugin_command() {
 test_thpm_doctor_reports_broken_hook_syntax() {
   local home_dir="$TMP_ROOT/doctor-broken-hook-home"
   local bin_dir="$TMP_ROOT/doctor-broken-hook-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local output
   local status
 
   write_colors_fixture "$home_dir"
   mkdir -p "$hook_dir" "$bin_dir"
   printf '#!/usr/bin/env bash\nif true\n' > "$hook_dir/99-broken.sh"
-  make_stub_bin "$bin_dir" omarchy-hook 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-hook 'exit 0'
 
   set +e
   output="$(PATH="$bin_dir:$PATH" THPM_THEME_ENV="$ROOT_DIR/lib/theme-env.sh" HOME="$home_dir" "$ROOT_DIR/thpm" doctor 2>&1)"
@@ -631,13 +631,13 @@ test_thpm_doctor_reports_broken_hook_syntax() {
 test_thpm_doctor_reports_firefox_profile_issue() {
   local home_dir="$TMP_ROOT/doctor-firefox-home"
   local bin_dir="$TMP_ROOT/doctor-firefox-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local output
 
   write_colors_fixture "$home_dir"
   mkdir -p "$hook_dir" "$bin_dir"
   cp "$ROOT_DIR/theme-set.d/40-firefox.sh" "$hook_dir/40-firefox.sh"
-  make_stub_bin "$bin_dir" omarchy-hook 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-hook 'exit 0'
   make_stub_bin "$bin_dir" firefox 'exit 0'
 
   output="$(PATH="$bin_dir:$PATH" THPM_THEME_ENV="$ROOT_DIR/lib/theme-env.sh" HOME="$home_dir" "$ROOT_DIR/thpm" doctor firefox 2>&1)"
@@ -649,7 +649,7 @@ test_thpm_doctor_reports_firefox_profile_issue() {
 test_thpm_doctor_zen_reports_missing_generated_files() {
   local home_dir="$TMP_ROOT/doctor-zen-missing-files-home"
   local bin_dir="$TMP_ROOT/doctor-zen-missing-files-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local profile_dir="$home_dir/.zen/default"
   local output
 
@@ -660,7 +660,7 @@ test_thpm_doctor_zen_reports_missing_generated_files() {
 [Install123]
 Default=default
 EOF
-  make_stub_bin "$bin_dir" omarchy-hook 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-hook 'exit 0'
   make_stub_bin "$bin_dir" zen-browser 'exit 0'
   make_stub_bin "$bin_dir" pgrep 'exit 1'
 
@@ -674,7 +674,7 @@ EOF
 test_thpm_doctor_zen_reports_late_import_overrides() {
   local home_dir="$TMP_ROOT/doctor-zen-late-import-home"
   local bin_dir="$TMP_ROOT/doctor-zen-late-import-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local profile_dir="$home_dir/.zen/default"
   local chrome_dir="$profile_dir/chrome"
   local output
@@ -702,7 +702,7 @@ EOF
 @import url("./thpm-zen-userContent.css");
 /* THPM Zen hook end */
 EOF
-  make_stub_bin "$bin_dir" omarchy-hook 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-hook 'exit 0'
   make_stub_bin "$bin_dir" zen-browser 'exit 0'
   make_stub_bin "$bin_dir" pgrep 'exit 1'
 
@@ -716,7 +716,7 @@ EOF
 test_thpm_doctor_zen_accepts_existing_import_variants() {
   local home_dir="$TMP_ROOT/doctor-zen-import-variant-home"
   local bin_dir="$TMP_ROOT/doctor-zen-import-variant-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local profile_dir="$home_dir/.zen/default"
   local chrome_dir="$profile_dir/chrome"
   local output
@@ -743,7 +743,7 @@ EOF
 @import url('thpm-zen-userContent.css');
 /* THPM Zen hook end */
 EOF
-  make_stub_bin "$bin_dir" omarchy-hook 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-hook 'exit 0'
   make_stub_bin "$bin_dir" zen-browser 'exit 0'
   make_stub_bin "$bin_dir" pgrep 'exit 1'
 
@@ -757,7 +757,7 @@ EOF
 test_thpm_doctor_zen_reports_stale_frame_rules() {
   local home_dir="$TMP_ROOT/doctor-zen-stale-frame-home"
   local bin_dir="$TMP_ROOT/doctor-zen-stale-frame-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local profile_dir="$home_dir/.zen/default"
   local chrome_dir="$profile_dir/chrome"
   local output
@@ -784,7 +784,7 @@ EOF
 @import url("./thpm-zen-userContent.css");
 /* THPM Zen hook end */
 EOF
-  make_stub_bin "$bin_dir" omarchy-hook 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-hook 'exit 0'
   make_stub_bin "$bin_dir" zen-browser 'exit 0'
   make_stub_bin "$bin_dir" pgrep 'exit 1'
 
@@ -797,14 +797,14 @@ EOF
 test_thpm_doctor_limits_plugin_specific_checks() {
   local home_dir="$TMP_ROOT/doctor-specific-home"
   local bin_dir="$TMP_ROOT/doctor-specific-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local output
 
   write_colors_fixture "$home_dir"
   mkdir -p "$hook_dir" "$bin_dir"
   printf '#!/usr/bin/env bash\nsource "${THPM_THEME_ENV:-$HOME/.local/share/thpm/lib/theme-env.sh}"\n' > "$hook_dir/10-spotify.sh"
   printf '#!/usr/bin/env bash\nsource "${THPM_THEME_ENV:-$HOME/.local/share/thpm/lib/theme-env.sh}"\n' > "$hook_dir/40-firefox.sh"
-  make_stub_bin "$bin_dir" omarchy-hook 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-hook 'exit 0'
 
   output="$(PATH="$bin_dir:$PATH" THPM_THEME_ENV="$ROOT_DIR/lib/theme-env.sh" HOME="$home_dir" "$ROOT_DIR/thpm" doctor spotify 2>&1)"
 
@@ -815,7 +815,7 @@ test_thpm_doctor_limits_plugin_specific_checks() {
 test_thpm_open_uses_xdg_open_for_hook_dir() {
   local home_dir="$TMP_ROOT/open-home"
   local bin_dir="$TMP_ROOT/open-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local open_log="$TMP_ROOT/xdg-open.log"
 
   mkdir -p "$hook_dir" "$bin_dir"
@@ -838,10 +838,10 @@ EOF
 test_thpm_gtk_post_enable_disable_updates_gsettings() {
   local home_dir="$TMP_ROOT/gtk-home"
   local bin_dir="$TMP_ROOT/gtk-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local gsettings_log="$TMP_ROOT/gsettings.log"
 
-  mkdir -p "$hook_dir" "$bin_dir" "$home_dir/.config/omarchy/current/theme"
+  mkdir -p "$hook_dir" "$bin_dir" "$home_dir/.config/omaniri/current/theme"
   printf '#!/usr/bin/env bash\n' > "$hook_dir/10-gtk.sh.sample"
   cat > "$bin_dir/gsettings" <<EOF
 #!/usr/bin/env bash
@@ -860,7 +860,7 @@ EOF
 test_theme_set_exports_colors_and_runs_enabled_hooks() {
   local home_dir="$TMP_ROOT/theme-set-home"
   local bin_dir="$TMP_ROOT/bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local output_file="$TMP_ROOT/hook-output"
   local skipped_file="$TMP_ROOT/skipped-output"
 
@@ -924,7 +924,7 @@ EOF
 
 test_theme_set_reports_hook_failure() {
   local home_dir="$TMP_ROOT/failing-hook-home"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local output
   local status
 
@@ -947,7 +947,7 @@ EOF
 test_theme_set_sends_restart_notification() {
   local home_dir="$TMP_ROOT/restart-home"
   local bin_dir="$TMP_ROOT/restart-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local notify_log="$TMP_ROOT/notify.log"
 
   write_colors_fixture "$home_dir"
@@ -980,7 +980,7 @@ test_theme_env_reads_colors_file_from_config() {
 
   mkdir -p "$config_dir"
   write_colors_fixture "$home_dir/default"
-  cp "$home_dir/default/.config/omarchy/current/theme/colors.toml" "$colors_file"
+  cp "$home_dir/default/.config/omaniri/current/theme/colors.toml" "$colors_file"
   cat > "$config_dir/config.toml" <<'EOF'
 [paths]
 colors_file = "~/custom-colors.toml"
@@ -999,7 +999,7 @@ EOF
 test_restart_notification_can_be_disabled_globally() {
   local home_dir="$TMP_ROOT/restart-global-disabled-home"
   local bin_dir="$TMP_ROOT/restart-global-disabled-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local notify_log="$TMP_ROOT/restart-global-disabled-notify.log"
 
   write_colors_fixture "$home_dir"
@@ -1028,7 +1028,7 @@ EOF
 test_restart_notification_can_be_disabled_for_app() {
   local home_dir="$TMP_ROOT/restart-app-disabled-home"
   local bin_dir="$TMP_ROOT/restart-app-disabled-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local notify_log="$TMP_ROOT/restart-app-disabled-notify.log"
 
   write_colors_fixture "$home_dir"
@@ -1057,7 +1057,7 @@ EOF
 test_restart_notification_supports_stdout_and_not_running() {
   local home_dir="$TMP_ROOT/restart-stdout-home"
   local bin_dir="$TMP_ROOT/restart-stdout-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local output
 
   write_colors_fixture "$home_dir"
@@ -1085,8 +1085,8 @@ EOF
 
 test_branding_plugin_copies_theme_branding() {
   local home_dir="$TMP_ROOT/branding-home"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
-  local theme_dir="$home_dir/.config/omarchy/current/theme"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
+  local theme_dir="$home_dir/.config/omaniri/current/theme"
 
   write_colors_fixture "$home_dir"
   mkdir -p "$hook_dir"
@@ -1096,14 +1096,14 @@ test_branding_plugin_copies_theme_branding() {
 
   run_theme_hooks "$home_dir" >/dev/null
 
-  assert_eq "about from theme" "$(cat "$home_dir/.config/omarchy/branding/about.txt")" "branding plugin copies theme about.txt"
-  assert_eq "screensaver from theme" "$(cat "$home_dir/.config/omarchy/branding/screensaver.txt")" "branding plugin copies theme screensaver.txt"
+  assert_eq "about from theme" "$(cat "$home_dir/.config/omaniri/branding/about.txt")" "branding plugin copies theme about.txt"
+  assert_eq "screensaver from theme" "$(cat "$home_dir/.config/omaniri/branding/screensaver.txt")" "branding plugin copies theme screensaver.txt"
 }
 
 test_branding_plugin_preserves_missing_sources() {
   local home_dir="$TMP_ROOT/branding-partial-home"
-  local theme_dir="$home_dir/.config/omarchy/current/theme"
-  local branding_dir="$home_dir/.config/omarchy/branding"
+  local theme_dir="$home_dir/.config/omaniri/current/theme"
+  local branding_dir="$home_dir/.config/omaniri/branding"
 
   write_colors_fixture "$home_dir"
   mkdir -p "$branding_dir"
@@ -1119,7 +1119,7 @@ test_branding_plugin_preserves_missing_sources() {
 
 test_branding_plugin_skips_without_theme_branding() {
   local home_dir="$TMP_ROOT/branding-missing-home"
-  local branding_dir="$home_dir/.config/omarchy/branding"
+  local branding_dir="$home_dir/.config/omaniri/branding"
   local output
 
   write_colors_fixture "$home_dir"
@@ -1129,16 +1129,16 @@ test_branding_plugin_skips_without_theme_branding() {
 
   output="$(THPM_THEME_ENV="$ROOT_DIR/lib/theme-env.sh" HOME="$home_dir" bash "$ROOT_DIR/theme-set.d/10-branding.sh" 2>&1)"
 
-  assert_contains "$output" "Omarchy branding not found. Skipping.." "branding plugin skips when theme has no branding files"
+  assert_contains "$output" "Omaniri branding not found. Skipping.." "branding plugin skips when theme has no branding files"
   assert_eq "old about" "$(cat "$branding_dir/about.txt")" "branding plugin preserves about target when skipping"
   assert_eq "old screensaver" "$(cat "$branding_dir/screensaver.txt")" "branding plugin preserves screensaver target when skipping"
 }
 
 test_branding_plugin_disable_stops_sync_until_enabled() {
   local home_dir="$TMP_ROOT/branding-disable-home"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
-  local theme_dir="$home_dir/.config/omarchy/current/theme"
-  local branding_dir="$home_dir/.config/omarchy/branding"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
+  local theme_dir="$home_dir/.config/omaniri/current/theme"
+  local branding_dir="$home_dir/.config/omaniri/branding"
   local output
 
   write_colors_fixture "$home_dir"
@@ -1180,7 +1180,7 @@ test_hook_plugins_use_portable_assumption_guards() {
   assert_contains "$(cat "$ROOT_DIR/theme-set.d/30-cursor.sh")" 'skipped "Cursor Base16 Tinted Themes extension directory"' "cursor plugin skips missing extension directory"
   assert_contains "$(cat "$ROOT_DIR/theme-set.d/40-steam.sh")" "command -v git" "steam plugin guards git dependency"
   assert_not_contains "$(cat "$ROOT_DIR/theme-set.d/40-steam.sh")" "fc-list" "steam plugin does not probe unused fontconfig path"
-  assert_not_contains "$(cat "$ROOT_DIR/theme-set.d/40-steam.sh")" "omarchy-font-current" "steam plugin does not assume omarchy-font-current"
+  assert_not_contains "$(cat "$ROOT_DIR/theme-set.d/40-steam.sh")" "omaniri-font-current" "steam plugin does not assume omaniri-font-current"
   assert_not_contains "$(cat "$ROOT_DIR/theme-set.d/40-qutebrowser.sh")" "grep -oP" "qutebrowser plugin avoids grep -P dependency"
   assert_contains "$(cat "$ROOT_DIR/theme-set.d/35-obsidian-terminal.sh")" "command -v python3" "obsidian terminal plugin guards python3 dependency"
   assert_not_contains "$(cat "$ROOT_DIR/theme-set.d/20-nwg-dock-hyprland.sh")" "eval" "nwg dock plugin avoids eval when restarting dock"
@@ -1188,7 +1188,7 @@ test_hook_plugins_use_portable_assumption_guards() {
 
 test_discord_system24_plugin_writes_theme_and_installs_existing_clients() {
   local home_dir="$TMP_ROOT/discord-system24-home"
-  local theme_dir="$home_dir/.config/omarchy/current/theme"
+  local theme_dir="$home_dir/.config/omaniri/current/theme"
   local vencord_dir="$home_dir/.config/Vencord/themes"
   local vesktop_dir="$home_dir/.config/vesktop/themes"
   local missing_dir="$home_dir/.config/Equicord/themes"
@@ -1208,8 +1208,8 @@ test_discord_system24_plugin_writes_theme_and_installs_existing_clients() {
   assert_contains "$output" "Discord System24 theme updated!" "discord system24 plugin reports success"
   assert_file_exists "$generated" "discord system24 plugin writes generated theme"
   assert_contains "$(cat "$generated")" '@import url("https://refact0r.github.io/system24/build/system24.css");' "discord system24 plugin imports upstream system24 build"
-  assert_contains "$(cat "$generated")" "--bg-4: #101112;" "discord system24 plugin uses Omarchy background"
-  assert_contains "$(cat "$generated")" "--text-2: #f1f2f3;" "discord system24 plugin uses Omarchy foreground"
+  assert_contains "$(cat "$generated")" "--bg-4: #101112;" "discord system24 plugin uses Omaniri background"
+  assert_contains "$(cat "$generated")" "--text-2: #f1f2f3;" "discord system24 plugin uses Omaniri foreground"
   assert_contains "$(cat "$generated")" "--accent-2: #cccccc;" "discord system24 plugin lifts low-contrast blue accent"
   assert_contains "$(cat "$generated")" "--online: #aaaaaa;" "discord system24 plugin lifts low-contrast status colors"
   assert_contains "$(cat "$generated")" "--text-4: #747474;" "discord system24 plugin keeps muted text dim"
@@ -1229,7 +1229,7 @@ test_discord_system24_plugin_writes_theme_and_installs_existing_clients() {
 test_browser_plugins_skip_missing_profiles() {
   local home_dir="$TMP_ROOT/browser-missing-profile-home"
   local bin_dir="$TMP_ROOT/browser-missing-profile-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local output
 
   write_colors_fixture "$home_dir"
@@ -1251,7 +1251,7 @@ test_browser_plugins_skip_missing_profiles() {
 test_zen_plugin_uses_managed_imports_and_migrates_legacy_css() {
   local home_dir="$TMP_ROOT/zen-managed-home"
   local bin_dir="$TMP_ROOT/zen-managed-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local profile_dir="$home_dir/.zen/default"
   local user_chrome="$profile_dir/chrome/userChrome.css"
   local user_content="$profile_dir/chrome/userContent.css"
@@ -1324,7 +1324,7 @@ EOF
 test_zen_plugin_repairs_incomplete_managed_import_block() {
   local home_dir="$TMP_ROOT/zen-repair-import-home"
   local bin_dir="$TMP_ROOT/zen-repair-import-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local profile_dir="$home_dir/.zen/default"
   local user_chrome="$profile_dir/chrome/userChrome.css"
   local user_content="$profile_dir/chrome/userContent.css"
@@ -1366,8 +1366,8 @@ EOF
 test_qutebrowser_plugin_writes_theme_and_config() {
   local home_dir="$TMP_ROOT/qutebrowser-home"
   local bin_dir="$TMP_ROOT/qutebrowser-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
-  local draw_file="$home_dir/.config/qutebrowser/omarchy/draw.py"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
+  local draw_file="$home_dir/.config/qutebrowser/omaniri/draw.py"
   local config_file="$home_dir/.config/qutebrowser/config.py"
 
   write_colors_fixture "$home_dir"
@@ -1384,20 +1384,20 @@ test_qutebrowser_plugin_writes_theme_and_config() {
   assert_contains "$(cat "$draw_file")" "bg        = '#101112'" "qutebrowser draw.py uses background"
   assert_contains "$(cat "$draw_file")" "preferred_color_scheme = 'dark'" "qutebrowser draw.py defaults to dark mode"
   assert_file_exists "$config_file" "qutebrowser plugin writes config.py"
-  assert_contains "$(cat "$config_file")" "import omarchy.draw" "qutebrowser config imports theme"
-  assert_contains "$(cat "$config_file")" "omarchy.draw.apply(c)" "qutebrowser config applies theme"
+  assert_contains "$(cat "$config_file")" "import omaniri.draw" "qutebrowser config imports theme"
+  assert_contains "$(cat "$config_file")" "omaniri.draw.apply(c)" "qutebrowser config applies theme"
 }
 
 test_qutebrowser_light_mode_change_requires_restart() {
   local home_dir="$TMP_ROOT/qutebrowser-light-home"
   local bin_dir="$TMP_ROOT/qutebrowser-light-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
-  local draw_file="$home_dir/.config/qutebrowser/omarchy/draw.py"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
+  local draw_file="$home_dir/.config/qutebrowser/omaniri/draw.py"
   local notify_log="$TMP_ROOT/qutebrowser-light-notify.log"
 
   write_colors_fixture "$home_dir"
   mkdir -p "$hook_dir" "$bin_dir" "$(dirname "$draw_file")"
-  touch "$home_dir/.config/omarchy/current/theme/light.mode"
+  touch "$home_dir/.config/omaniri/current/theme/light.mode"
   cat > "$draw_file" <<'EOF'
 def apply(c):
     c.colors.webpage.preferred_color_scheme = 'dark'
@@ -1422,8 +1422,8 @@ EOF
 test_fzf_plugin_writes_fish_theme() {
   local home_dir="$TMP_ROOT/fzf-home"
   local bin_dir="$TMP_ROOT/fzf-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
-  local output_file="$home_dir/.config/omarchy/current/theme/fzf.fish"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
+  local output_file="$home_dir/.config/omaniri/current/theme/fzf.fish"
 
   write_colors_fixture "$home_dir"
   mkdir -p "$hook_dir" "$bin_dir"
@@ -1444,8 +1444,8 @@ test_fzf_plugin_writes_fish_theme() {
 test_fish_plugin_writes_shell_colors() {
   local home_dir="$TMP_ROOT/fish-home"
   local bin_dir="$TMP_ROOT/fish-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
-  local output_file="$home_dir/.config/omarchy/current/theme/colors.fish"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
+  local output_file="$home_dir/.config/omaniri/current/theme/colors.fish"
 
   write_colors_fixture "$home_dir"
   mkdir -p "$hook_dir" "$bin_dir"
@@ -1465,7 +1465,7 @@ test_fish_plugin_writes_shell_colors() {
 
 test_obsidian_terminal_plugin_discovers_registered_vault() {
   local home_dir="$TMP_ROOT/obsidian-home"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local vault_dir="$home_dir/Notes/Team Vault"
   local data_file="$vault_dir/.obsidian/plugins/terminal/data.json"
 
@@ -1519,7 +1519,7 @@ EOF
 
 test_foot_plugin_respects_disable_flag() {
   local home_dir="$TMP_ROOT/foot-disabled-home"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local log_file="/tmp/foot-theme-hook.log"
 
   rm -f "$log_file"
@@ -1536,7 +1536,7 @@ test_foot_plugin_respects_disable_flag() {
 
 test_foot_plugin_logs_missing_theme_file() {
   local home_dir="$TMP_ROOT/foot-missing-home"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local log_file="/tmp/foot-theme-hook.log"
 
   rm -f "$log_file"
@@ -1554,8 +1554,8 @@ test_foot_plugin_logs_missing_theme_file() {
 test_foot_plugin_reads_theme_and_logs_no_ttys() {
   local home_dir="$TMP_ROOT/foot-theme-home"
   local bin_dir="$TMP_ROOT/foot-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
-  local foot_file="$home_dir/.config/omarchy/current/theme/foot.ini"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
+  local foot_file="$home_dir/.config/omaniri/current/theme/foot.ini"
   local base_file="$home_dir/.config/foot/foot.ini"
   local log_file="/tmp/foot-theme-hook.log"
 
@@ -1589,8 +1589,8 @@ EOF
 test_foot_plugin_writes_osc_sequences_to_tty() {
   local home_dir="$TMP_ROOT/foot-tty-home"
   local bin_dir="$TMP_ROOT/foot-tty-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
-  local foot_file="$home_dir/.config/omarchy/current/theme/foot.ini"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
+  local foot_file="$home_dir/.config/omaniri/current/theme/foot.ini"
   local wrapper="$TMP_ROOT/foot-tty-wrapper.sh"
   local output
 
@@ -1653,8 +1653,8 @@ EOF
 test_cava_plugin_writes_theme_and_updates_config() {
   local home_dir="$TMP_ROOT/cava-home"
   local bin_dir="$TMP_ROOT/cava-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
-  local theme_file="$home_dir/.config/cava/themes/omarchy"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
+  local theme_file="$home_dir/.config/cava/themes/omaniri"
   local config_file="$home_dir/.config/cava/config"
   local pkill_log="$TMP_ROOT/pkill.log"
 
@@ -1680,10 +1680,10 @@ EOF
 
   PATH="$bin_dir:$PATH" run_theme_hooks "$home_dir" >/dev/null
 
-  assert_file_exists "$theme_file" "cava plugin writes omarchy theme"
+  assert_file_exists "$theme_file" "cava plugin writes omaniri theme"
   assert_contains "$(cat "$theme_file")" "gradient_color_1 = '#666666'" "cava theme uses normal cyan"
   assert_contains "$(cat "$theme_file")" "gradient_color_8 = '#666666'" "cava theme writes final gradient color"
-  assert_contains "$(cat "$config_file")" "theme = 'omarchy'" "cava plugin inserts theme setting"
+  assert_contains "$(cat "$config_file")" "theme = 'omaniri'" "cava plugin inserts theme setting"
   assert_file_exists "$pkill_log" "cava plugin signals running cava"
   assert_contains "$(cat "$pkill_log")" "-USR2 cava" "cava plugin sends USR2"
 }
@@ -1691,7 +1691,7 @@ EOF
 test_cava_plugin_does_not_duplicate_theme_setting() {
   local home_dir="$TMP_ROOT/cava-existing-home"
   local bin_dir="$TMP_ROOT/cava-existing-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local config_file="$home_dir/.config/cava/config"
   local theme_count
 
@@ -1701,7 +1701,7 @@ test_cava_plugin_does_not_duplicate_theme_setting() {
   chmod +x "$hook_dir/40-cava.sh"
   cat > "$config_file" <<'EOF'
 [color]
-theme = 'omarchy'
+theme = 'omaniri'
 gradient = 0
 EOF
   make_stub_bin "$bin_dir" cava 'exit 0'
@@ -1709,7 +1709,7 @@ EOF
   make_stub_bin "$bin_dir" notify-send 'exit 0'
 
   PATH="$bin_dir:$PATH" run_theme_hooks "$home_dir" >/dev/null
-  theme_count="$(grep -c "theme = 'omarchy'" "$config_file")"
+  theme_count="$(grep -c "theme = 'omaniri'" "$config_file")"
 
   assert_eq "1" "$theme_count" "cava plugin does not duplicate existing theme setting"
 }
@@ -1717,8 +1717,8 @@ EOF
 test_superfile_plugin_writes_theme_and_requests_restart() {
   local home_dir="$TMP_ROOT/superfile-home"
   local bin_dir="$TMP_ROOT/superfile-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
-  local theme_file="$home_dir/.config/superfile/theme/omarchy.toml"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
+  local theme_file="$home_dir/.config/superfile/theme/omaniri.toml"
   local notify_log="$TMP_ROOT/superfile-notify.log"
 
   write_colors_fixture "$home_dir"
@@ -1735,7 +1735,7 @@ EOF
 
   PATH="$bin_dir:$PATH" run_theme_hooks "$home_dir" >/dev/null
 
-  assert_file_exists "$theme_file" "superfile plugin writes omarchy theme"
+  assert_file_exists "$theme_file" "superfile plugin writes omaniri theme"
   assert_contains "$(cat "$theme_file")" "full_screen_bg = '#101112'" "superfile theme uses background"
   assert_contains "$(cat "$theme_file")" "file_panel_border_active = '#444444'" "superfile theme uses normal blue"
   assert_file_exists "$notify_log" "superfile plugin requests restart notification"
@@ -1745,8 +1745,8 @@ EOF
 test_swaync_plugin_installs_theme_files_and_reloads() {
   local home_dir="$TMP_ROOT/swaync-home"
   local bin_dir="$TMP_ROOT/swaync-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
-  local source_dir="$home_dir/.config/omarchy/current/theme"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
+  local source_dir="$home_dir/.config/omaniri/current/theme"
   local target_dir="$home_dir/.config/swaync"
   local reload_log="$TMP_ROOT/swaync-reload.log"
 
@@ -1777,16 +1777,16 @@ EOF
 test_swaync_plugin_prefers_named_theme_over_current_theme() {
   local home_dir="$TMP_ROOT/swaync-named-home"
   local bin_dir="$TMP_ROOT/swaync-named-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
-  local current_dir="$home_dir/.config/omarchy/current/theme"
-  local named_dir="$home_dir/.config/omarchy/themes/named-theme"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
+  local current_dir="$home_dir/.config/omaniri/current/theme"
+  local named_dir="$home_dir/.config/omaniri/themes/named-theme"
   local target_dir="$home_dir/.config/swaync"
 
   write_colors_fixture "$home_dir"
   mkdir -p "$hook_dir" "$bin_dir" "$named_dir"
   cp "$ROOT_DIR/theme-set.d/25-swaync.sh" "$hook_dir/25-swaync.sh"
   chmod +x "$hook_dir/25-swaync.sh"
-  printf 'named-theme\n' > "$home_dir/.config/omarchy/current/theme.name"
+  printf 'named-theme\n' > "$home_dir/.config/omaniri/current/theme.name"
   printf 'style-current\n' > "$current_dir/swaync.style.css"
   printf '{"config":"current"}\n' > "$current_dir/swaync.config.json"
   printf 'colors-current\n' > "$current_dir/colors.css"
@@ -1805,8 +1805,8 @@ test_swaync_plugin_prefers_named_theme_over_current_theme() {
 test_tmux_plugin_skips_without_theme_conf() {
   local home_dir="$TMP_ROOT/tmux-skip-home"
   local bin_dir="$TMP_ROOT/tmux-skip-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
-  local target_file="$home_dir/.config/tmux/omarchy-theme.conf"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
+  local target_file="$home_dir/.config/tmux/omaniri-theme.conf"
 
   write_colors_fixture "$home_dir"
   mkdir -p "$hook_dir" "$bin_dir"
@@ -1824,8 +1824,8 @@ test_tmux_plugin_skips_without_theme_conf() {
 test_tmux_plugin_removes_managed_theme_when_theme_conf_missing() {
   local home_dir="$TMP_ROOT/tmux-cleanup-home"
   local bin_dir="$TMP_ROOT/tmux-cleanup-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
-  local target_file="$home_dir/.config/tmux/omarchy-theme.conf"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
+  local target_file="$home_dir/.config/tmux/omaniri-theme.conf"
   local config_file="$home_dir/.config/tmux/tmux.conf"
   local tmux_log="$TMP_ROOT/tmux-cleanup.log"
 
@@ -1834,7 +1834,7 @@ test_tmux_plugin_removes_managed_theme_when_theme_conf_missing() {
   cp "$ROOT_DIR/theme-set.d/10-tmux.sh" "$hook_dir/10-tmux.sh"
   chmod +x "$hook_dir/10-tmux.sh"
   printf 'set -g status-style "bg=#000000"\n' > "$target_file"
-  printf 'set -g mouse on\n\nsource-file ~/.config/tmux/omarchy-theme.conf\n' > "$config_file"
+  printf 'set -g mouse on\n\nsource-file ~/.config/tmux/omaniri-theme.conf\n' > "$config_file"
   cat > "$bin_dir/tmux" <<EOF
 #!/usr/bin/env bash
 printf '%s\n' "\$*" >> "$tmux_log"
@@ -1846,16 +1846,16 @@ EOF
   PATH="$bin_dir:$PATH" run_theme_hooks "$home_dir" >/dev/null
 
   assert_file_missing "$target_file" "tmux plugin removes stale managed theme file"
-  assert_not_contains "$(cat "$config_file")" "source-file ~/.config/tmux/omarchy-theme.conf" "tmux plugin removes managed source line"
+  assert_not_contains "$(cat "$config_file")" "source-file ~/.config/tmux/omaniri-theme.conf" "tmux plugin removes managed source line"
   assert_contains "$(cat "$tmux_log")" "source-file $config_file" "tmux plugin reloads base config after cleanup"
 }
 
 test_tmux_plugin_installs_theme_and_reloads() {
   local home_dir="$TMP_ROOT/tmux-home"
   local bin_dir="$TMP_ROOT/tmux-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
-  local theme_file="$home_dir/.config/omarchy/current/theme/tmux.conf"
-  local target_file="$home_dir/.config/tmux/omarchy-theme.conf"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
+  local theme_file="$home_dir/.config/omaniri/current/theme/tmux.conf"
+  local target_file="$home_dir/.config/tmux/omaniri-theme.conf"
   local config_file="$home_dir/.config/tmux/tmux.conf"
   local tmux_log="$TMP_ROOT/tmux.log"
   local source_count
@@ -1879,8 +1879,8 @@ EOF
   assert_file_exists "$target_file" "tmux plugin installs theme file"
   assert_eq "$(cat "$theme_file")" "$(cat "$target_file")" "tmux plugin copies current theme tmux.conf"
   assert_file_exists "$config_file" "tmux plugin creates xdg tmux config"
-  assert_contains "$(cat "$config_file")" "source-file ~/.config/tmux/omarchy-theme.conf" "tmux plugin sources stable theme file"
-  source_count="$(grep -Fc "source-file ~/.config/tmux/omarchy-theme.conf" "$config_file")"
+  assert_contains "$(cat "$config_file")" "source-file ~/.config/tmux/omaniri-theme.conf" "tmux plugin sources stable theme file"
+  source_count="$(grep -Fc "source-file ~/.config/tmux/omaniri-theme.conf" "$config_file")"
   assert_eq "1" "$source_count" "tmux plugin does not duplicate source line"
   assert_contains "$(cat "$tmux_log")" "source-file $target_file" "tmux plugin reloads installed theme"
 }
@@ -1888,8 +1888,8 @@ EOF
 test_tmux_plugin_prefers_existing_legacy_config() {
   local home_dir="$TMP_ROOT/tmux-legacy-home"
   local bin_dir="$TMP_ROOT/tmux-legacy-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
-  local theme_file="$home_dir/.config/omarchy/current/theme/tmux.conf"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
+  local theme_file="$home_dir/.config/omaniri/current/theme/tmux.conf"
   local legacy_config="$home_dir/.tmux.conf"
   local xdg_config="$home_dir/.config/tmux/tmux.conf"
 
@@ -1905,21 +1905,21 @@ test_tmux_plugin_prefers_existing_legacy_config() {
 
   PATH="$bin_dir:$PATH" run_theme_hooks "$home_dir" >/dev/null
 
-  assert_contains "$(cat "$legacy_config")" "source-file ~/.config/tmux/omarchy-theme.conf" "tmux plugin uses existing legacy tmux config"
+  assert_contains "$(cat "$legacy_config")" "source-file ~/.config/tmux/omaniri-theme.conf" "tmux plugin uses existing legacy tmux config"
   assert_file_missing "$xdg_config" "tmux plugin does not create xdg config when legacy config exists"
 }
 
 test_vscode_plugin_skips_when_theme_provides_vscode_json() {
   local home_dir="$TMP_ROOT/vscode-skip-home"
   local bin_dir="$TMP_ROOT/vscode-skip-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
-  local generated_file="$home_dir/.config/omarchy/current/theme/vscode_colors.json"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
+  local generated_file="$home_dir/.config/omaniri/current/theme/vscode_colors.json"
 
   write_colors_fixture "$home_dir"
   mkdir -p "$hook_dir" "$bin_dir"
   cp "$ROOT_DIR/theme-set.d/30-vscode.sh" "$hook_dir/30-vscode.sh"
   chmod +x "$hook_dir/30-vscode.sh"
-  printf '{"theme":"provided"}\n' > "$home_dir/.config/omarchy/current/theme/vscode.json"
+  printf '{"theme":"provided"}\n' > "$home_dir/.config/omaniri/current/theme/vscode.json"
   make_stub_bin "$bin_dir" code 'printf "code should not be called\n" >&2; exit 1'
   make_stub_bin "$bin_dir" pgrep 'exit 1'
   make_stub_bin "$bin_dir" notify-send 'exit 0'
@@ -1932,9 +1932,9 @@ test_vscode_plugin_skips_when_theme_provides_vscode_json() {
 test_vscode_plugin_patches_extension_manifest_and_installs_theme() {
   local home_dir="$TMP_ROOT/vscode-full-home"
   local bin_dir="$TMP_ROOT/vscode-full-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local extension_dir="$home_dir/.vscode/extensions/tintedtheming.base16-tinted-themes-1.0.0"
-  local theme_file="$extension_dir/themes/base16/omarchy.json"
+  local theme_file="$extension_dir/themes/base16/omaniri.json"
   local package_file="$extension_dir/package.json"
   local code_log="$TMP_ROOT/vscode-code.log"
 
@@ -1964,18 +1964,18 @@ EOF
 
   PATH="$bin_dir:$PATH" run_theme_hooks "$home_dir" >/dev/null
 
-  assert_file_exists "$theme_file" "vscode plugin installs omarchy theme file"
-  assert_contains "$(cat "$theme_file")" '"name": "Omarchy"' "vscode theme file contains Omarchy theme"
+  assert_file_exists "$theme_file" "vscode plugin installs omaniri theme file"
+  assert_contains "$(cat "$theme_file")" '"name": "Omaniri"' "vscode theme file contains Omaniri theme"
   assert_contains "$(cat "$theme_file")" '"foreground":"#777777"' "vscode theme uses palette colors"
-  assert_eq "Omarchy" "$(jq -r '.contributes.themes[] | select(.label == "Omarchy") | .label' "$package_file")" "vscode plugin adds Omarchy manifest entry"
-  assert_eq "./themes/base16/omarchy.json" "$(jq -r '.contributes.themes[] | select(.label == "Omarchy") | .path' "$package_file")" "vscode manifest points to installed theme"
+  assert_eq "Omaniri" "$(jq -r '.contributes.themes[] | select(.label == "Omaniri") | .label' "$package_file")" "vscode plugin adds Omaniri manifest entry"
+  assert_eq "./themes/base16/omaniri.json" "$(jq -r '.contributes.themes[] | select(.label == "Omaniri") | .path' "$package_file")" "vscode manifest points to installed theme"
   assert_contains "$(cat "$code_log")" "--install-extension tintedtheming.base16-tinted-themes" "vscode plugin installs extension when missing"
 }
 
 test_cursor_plugin_suppresses_electron_deprecation_warning() {
   local home_dir="$TMP_ROOT/cursor-warning-home"
   local bin_dir="$TMP_ROOT/cursor-warning-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local extension_dir="$home_dir/.cursor/extensions/tintedtheming.base16-tinted-themes-1.0.0"
   local package_file="$extension_dir/package.json"
   local cursor_log="$TMP_ROOT/cursor.log"
@@ -2015,12 +2015,12 @@ EOF
 
 test_theme_set_extracts_colors_with_leading_whitespace_and_comments() {
   local home_dir="$TMP_ROOT/spaced-colors-home"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local output_file="$TMP_ROOT/spaced-colors-output"
-  local theme_dir="$home_dir/.config/omarchy/current/theme"
+  local theme_dir="$home_dir/.config/omaniri/current/theme"
 
   write_colors_fixture "$home_dir"
-  theme_dir="$home_dir/.config/omarchy/current/theme"
+  theme_dir="$home_dir/.config/omaniri/current/theme"
   cat > "$theme_dir/colors.toml" <<'EOF'
 # comments should be ignored
   background = "#010203" # inline comment
@@ -2060,10 +2060,10 @@ EOF
 test_install_preserves_disabled_plugins_and_installs_files() {
   local home_dir="$TMP_ROOT/install-home"
   local bin_dir="$TMP_ROOT/install-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local installed_thpm="$home_dir/.local/bin/thpm"
-  local legacy_thpm="$home_dir/.local/share/omarchy/bin/thpm"
-  local installed_theme_set="$home_dir/.config/omarchy/hooks/theme-set"
+  local legacy_thpm="$home_dir/.local/share/omaniri/bin/thpm"
+  local installed_theme_set="$home_dir/.config/omaniri/hooks/theme-set"
   local installed_theme_env="$home_dir/.local/share/thpm/lib/theme-env.sh"
   local installed_skill="$home_dir/.local/share/thpm/skills/theme-hook-plugin-authoring/SKILL.md"
   local installed_version="$home_dir/.local/share/thpm/version"
@@ -2072,16 +2072,16 @@ test_install_preserves_disabled_plugins_and_installs_files() {
   local output
   local status
 
-  mkdir -p "$hook_dir" "$bin_dir" "$home_dir/.local/share/omarchy/bin" "$(dirname "$update_cache")"
+  mkdir -p "$hook_dir" "$bin_dir" "$home_dir/.local/share/omaniri/bin" "$(dirname "$update_cache")"
   printf '#!/usr/bin/env bash\n' > "$legacy_thpm"
-  printf '# Omarchy 3.3+ uses colors.toml as the source of truth for theme colors.\n' > "$installed_theme_set"
+  printf '# Omaniri 3.3+ uses colors.toml as the source of truth for theme colors.\n' > "$installed_theme_set"
   printf '#!/usr/bin/env bash\n' > "$hook_dir/00-fish.sh.sample"
   printf 'checked_at=1\nstatus=update_available\nremote_commit=old\n' > "$update_cache"
 
   make_stub_bin "$bin_dir" pacman 'exit 0'
   make_stub_bin "$bin_dir" sudo 'printf "sudo should not be called\n" >&2; exit 1'
-  make_stub_bin "$bin_dir" omarchy-hook 'printf "omarchy-hook %s\n" "$*"'
-  make_stub_bin "$bin_dir" omarchy-show-done 'printf "done\n"'
+  make_stub_bin "$bin_dir" omaniri-hook 'printf "omaniri-hook %s\n" "$*"'
+  make_stub_bin "$bin_dir" omaniri-show-done 'printf "done\n"'
   make_install_git_stub "$bin_dir"
 
   output="$(PATH="$bin_dir:$PATH" HOME="$home_dir" "$ROOT_DIR/install.sh" 2>&1)"
@@ -2089,11 +2089,11 @@ test_install_preserves_disabled_plugins_and_installs_files() {
 
   assert_success "$status" "install exits successfully"
   assert_contains "$output" "Downloading thpm.." "install announces download"
-  assert_contains "$output" "omarchy-hook theme-set" "install applies theme-set hook"
+  assert_contains "$output" "omaniri-hook theme-set" "install applies theme-set hook"
   assert_eq "thpm" "$(install_git_branch)" "install defaults to release branch"
   assert_eq "clone --branch thpm --depth 1 https://github.com/OldJobobo/theme-hook-plugin-manager.git /tmp/theme-hook" "$(install_git_args)" "install clones expected repository and destination"
   assert_file_executable "$installed_thpm" "install writes executable thpm"
-  assert_file_missing "$legacy_thpm" "install removes legacy omarchy bin thpm"
+  assert_file_missing "$legacy_thpm" "install removes legacy omaniri bin thpm"
   assert_file_missing "$installed_theme_set" "install removes old thpm theme-set dispatcher"
   assert_file_exists "$installed_theme_env" "install writes shared theme env"
   assert_file_exists "$installed_skill" "install writes bundled agent skills"
@@ -2123,8 +2123,8 @@ test_install_preserves_existing_config() {
   printf '[notifications.restart]\nenabled = false\n' > "$config_file"
   make_stub_bin "$bin_dir" pacman 'exit 0'
   make_stub_bin "$bin_dir" sudo 'printf "sudo should not be called\n" >&2; exit 1'
-  make_stub_bin "$bin_dir" omarchy-hook 'exit 0'
-  make_stub_bin "$bin_dir" omarchy-show-done 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-hook 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-show-done 'exit 0'
   make_install_git_stub "$bin_dir"
 
   PATH="$bin_dir:$PATH" HOME="$home_dir" "$ROOT_DIR/install.sh" >/dev/null 2>&1
@@ -2138,7 +2138,7 @@ enabled = false" "$(cat "$config_file")" "install preserves existing config.toml
 test_install_keeps_non_executable_hooks_enabled() {
   local home_dir="$TMP_ROOT/install-non-executable-home"
   local bin_dir="$TMP_ROOT/install-non-executable-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local status
 
   rm -f "$TMP_ROOT/install-git-branch.log"
@@ -2148,8 +2148,8 @@ test_install_keeps_non_executable_hooks_enabled() {
   chmod 644 "$hook_dir/30-vscode.sh"
   make_stub_bin "$bin_dir" pacman 'exit 0'
   make_stub_bin "$bin_dir" sudo 'printf "sudo should not be called\n" >&2; exit 1'
-  make_stub_bin "$bin_dir" omarchy-hook 'exit 0'
-  make_stub_bin "$bin_dir" omarchy-show-done 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-hook 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-show-done 'exit 0'
   make_install_git_stub "$bin_dir"
 
   PATH="$bin_dir:$PATH" HOME="$home_dir" "$ROOT_DIR/install.sh" >/dev/null 2>&1
@@ -2163,7 +2163,7 @@ test_install_keeps_non_executable_hooks_enabled() {
 test_install_recovers_all_bundled_plugins_disabled_by_bad_update() {
   local home_dir="$TMP_ROOT/install-all-disabled-home"
   local bin_dir="$TMP_ROOT/install-all-disabled-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local hook
   local status
 
@@ -2175,8 +2175,8 @@ test_install_recovers_all_bundled_plugins_disabled_by_bad_update() {
   done
   make_stub_bin "$bin_dir" pacman 'exit 0'
   make_stub_bin "$bin_dir" sudo 'printf "sudo should not be called\n" >&2; exit 1'
-  make_stub_bin "$bin_dir" omarchy-hook 'exit 0'
-  make_stub_bin "$bin_dir" omarchy-show-done 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-hook 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-show-done 'exit 0'
   make_install_git_stub "$bin_dir"
 
   PATH="$bin_dir:$PATH" HOME="$home_dir" "$ROOT_DIR/install.sh" >/dev/null 2>&1
@@ -2194,7 +2194,7 @@ test_install_recovers_all_bundled_plugins_disabled_by_bad_update() {
 test_install_recovery_preserves_custom_sample_hooks() {
   local home_dir="$TMP_ROOT/install-all-disabled-custom-home"
   local bin_dir="$TMP_ROOT/install-all-disabled-custom-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local hook
   local status
 
@@ -2207,8 +2207,8 @@ test_install_recovery_preserves_custom_sample_hooks() {
   printf '#!/usr/bin/env bash\nprintf custom\n' > "$hook_dir/99-custom.sh.sample"
   make_stub_bin "$bin_dir" pacman 'exit 0'
   make_stub_bin "$bin_dir" sudo 'printf "sudo should not be called\n" >&2; exit 1'
-  make_stub_bin "$bin_dir" omarchy-hook 'exit 0'
-  make_stub_bin "$bin_dir" omarchy-show-done 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-hook 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-show-done 'exit 0'
   make_install_git_stub "$bin_dir"
 
   PATH="$bin_dir:$PATH" HOME="$home_dir" "$ROOT_DIR/install.sh" >/dev/null 2>&1
@@ -2224,7 +2224,7 @@ test_install_recovery_preserves_custom_sample_hooks() {
 test_install_preserves_mixed_enabled_and_disabled_state() {
   local home_dir="$TMP_ROOT/install-mixed-state-home"
   local bin_dir="$TMP_ROOT/install-mixed-state-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local output
   local status
 
@@ -2236,8 +2236,8 @@ test_install_preserves_mixed_enabled_and_disabled_state() {
   printf '#!/usr/bin/env bash\n' > "$hook_dir/30-vscode.sh.sample"
   make_stub_bin "$bin_dir" pacman 'exit 0'
   make_stub_bin "$bin_dir" sudo 'printf "sudo should not be called\n" >&2; exit 1'
-  make_stub_bin "$bin_dir" omarchy-hook 'exit 0'
-  make_stub_bin "$bin_dir" omarchy-show-done 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-hook 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-show-done 'exit 0'
   make_install_git_stub "$bin_dir"
 
   output="$(PATH="$bin_dir:$PATH" HOME="$home_dir" "$ROOT_DIR/install.sh" 2>&1)"
@@ -2254,7 +2254,7 @@ test_install_preserves_mixed_enabled_and_disabled_state() {
 test_install_preserves_enabled_branding_plugin() {
   local home_dir="$TMP_ROOT/install-branding-enabled-home"
   local bin_dir="$TMP_ROOT/install-branding-enabled-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local status
 
   rm -f "$TMP_ROOT/install-git-branch.log"
@@ -2263,8 +2263,8 @@ test_install_preserves_enabled_branding_plugin() {
   printf '#!/usr/bin/env bash\n' > "$hook_dir/10-branding.sh"
   make_stub_bin "$bin_dir" pacman 'exit 0'
   make_stub_bin "$bin_dir" sudo 'printf "sudo should not be called\n" >&2; exit 1'
-  make_stub_bin "$bin_dir" omarchy-hook 'exit 0'
-  make_stub_bin "$bin_dir" omarchy-show-done 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-hook 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-show-done 'exit 0'
   make_install_git_stub "$bin_dir"
 
   PATH="$bin_dir:$PATH" HOME="$home_dir" "$ROOT_DIR/install.sh" >/dev/null 2>&1
@@ -2282,11 +2282,11 @@ test_install_respects_branch_override() {
 
   rm -f "$TMP_ROOT/install-git-branch.log"
   rm -f "$TMP_ROOT/install-git-args.log"
-  mkdir -p "$bin_dir" "$home_dir/.config/omarchy/hooks"
+  mkdir -p "$bin_dir" "$home_dir/.config/omaniri/hooks"
   make_stub_bin "$bin_dir" pacman 'exit 0'
   make_stub_bin "$bin_dir" sudo 'printf "sudo should not be called\n" >&2; exit 1'
-  make_stub_bin "$bin_dir" omarchy-hook 'exit 0'
-  make_stub_bin "$bin_dir" omarchy-show-done 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-hook 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-show-done 'exit 0'
   make_install_git_stub "$bin_dir"
 
   THPM_BRANCH=test-branch PATH="$bin_dir:$PATH" HOME="$home_dir" "$ROOT_DIR/install.sh" >/dev/null 2>&1
@@ -2300,7 +2300,7 @@ test_install_respects_branch_override() {
 test_install_preserves_existing_sample_disabled_plugin() {
   local home_dir="$TMP_ROOT/install-sample-home"
   local bin_dir="$TMP_ROOT/install-sample-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local status
 
   rm -f "$TMP_ROOT/install-git-branch.log"
@@ -2309,8 +2309,8 @@ test_install_preserves_existing_sample_disabled_plugin() {
   printf '#!/usr/bin/env bash\n' > "$hook_dir/30-vscode.sh.sample"
   make_stub_bin "$bin_dir" pacman 'exit 0'
   make_stub_bin "$bin_dir" sudo 'printf "sudo should not be called\n" >&2; exit 1'
-  make_stub_bin "$bin_dir" omarchy-hook 'exit 0'
-  make_stub_bin "$bin_dir" omarchy-show-done 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-hook 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-show-done 'exit 0'
   make_install_git_stub "$bin_dir"
 
   PATH="$bin_dir:$PATH" HOME="$home_dir" "$ROOT_DIR/install.sh" >/dev/null 2>&1
@@ -2324,7 +2324,7 @@ test_install_preserves_existing_sample_disabled_plugin() {
 test_install_disabled_sample_wins_over_stale_active_plugin() {
   local home_dir="$TMP_ROOT/install-stale-active-home"
   local bin_dir="$TMP_ROOT/install-stale-active-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local status
 
   rm -f "$TMP_ROOT/install-git-branch.log"
@@ -2334,8 +2334,8 @@ test_install_disabled_sample_wins_over_stale_active_plugin() {
   printf '#!/usr/bin/env bash\nprintf stale-active\n' > "$hook_dir/30-vscode.sh"
   make_stub_bin "$bin_dir" pacman 'exit 0'
   make_stub_bin "$bin_dir" sudo 'printf "sudo should not be called\n" >&2; exit 1'
-  make_stub_bin "$bin_dir" omarchy-hook 'exit 0'
-  make_stub_bin "$bin_dir" omarchy-show-done 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-hook 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-show-done 'exit 0'
   make_install_git_stub "$bin_dir"
 
   PATH="$bin_dir:$PATH" HOME="$home_dir" "$ROOT_DIR/install.sh" >/dev/null 2>&1
@@ -2347,10 +2347,10 @@ test_install_disabled_sample_wins_over_stale_active_plugin() {
   assert_not_contains "$(cat "$hook_dir/30-vscode.sh.sample")" "stale-active" "install replaces stale active hook with bundled hook"
 }
 
-test_install_preserves_custom_omarchy_hook() {
+test_install_preserves_custom_omaniri_hook() {
   local home_dir="$TMP_ROOT/install-custom-home"
   local bin_dir="$TMP_ROOT/install-custom-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local custom_hook="$hook_dir/99-custom.sh"
   local status
 
@@ -2360,15 +2360,15 @@ test_install_preserves_custom_omarchy_hook() {
   printf '#!/usr/bin/env bash\nprintf custom\n' > "$custom_hook"
   make_stub_bin "$bin_dir" pacman 'exit 0'
   make_stub_bin "$bin_dir" sudo 'printf "sudo should not be called\n" >&2; exit 1'
-  make_stub_bin "$bin_dir" omarchy-hook 'exit 0'
-  make_stub_bin "$bin_dir" omarchy-show-done 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-hook 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-show-done 'exit 0'
   make_install_git_stub "$bin_dir"
 
   PATH="$bin_dir:$PATH" HOME="$home_dir" "$ROOT_DIR/install.sh" >/dev/null 2>&1
   status=$?
 
   assert_success "$status" "install with custom hook exits successfully"
-  assert_file_exists "$custom_hook" "install preserves custom Omarchy hook"
+  assert_file_exists "$custom_hook" "install preserves custom Omaniri hook"
   assert_eq '#!/usr/bin/env bash
 printf custom' "$(cat "$custom_hook")" "install preserves custom hook contents"
 }
@@ -2376,7 +2376,7 @@ printf custom' "$(cat "$custom_hook")" "install preserves custom hook contents"
 test_install_preserves_custom_sample_hook() {
   local home_dir="$TMP_ROOT/install-custom-sample-home"
   local bin_dir="$TMP_ROOT/install-custom-sample-bin"
-  local hook_dir="$home_dir/.config/omarchy/hooks/theme-set.d"
+  local hook_dir="$home_dir/.config/omaniri/hooks/theme-set.d"
   local custom_hook="$hook_dir/99-custom.sh.sample"
   local status
 
@@ -2386,8 +2386,8 @@ test_install_preserves_custom_sample_hook() {
   printf '#!/usr/bin/env bash\nprintf custom-sample\n' > "$custom_hook"
   make_stub_bin "$bin_dir" pacman 'exit 0'
   make_stub_bin "$bin_dir" sudo 'printf "sudo should not be called\n" >&2; exit 1'
-  make_stub_bin "$bin_dir" omarchy-hook 'exit 0'
-  make_stub_bin "$bin_dir" omarchy-show-done 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-hook 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-show-done 'exit 0'
   make_install_git_stub "$bin_dir"
 
   PATH="$bin_dir:$PATH" HOME="$home_dir" "$ROOT_DIR/install.sh" >/dev/null 2>&1
@@ -2403,7 +2403,7 @@ printf custom-sample' "$(cat "$custom_hook")" "install preserves custom .sample 
 test_install_preserves_user_theme_set_hook() {
   local home_dir="$TMP_ROOT/install-user-theme-set-home"
   local bin_dir="$TMP_ROOT/install-user-theme-set-bin"
-  local theme_set="$home_dir/.config/omarchy/hooks/theme-set"
+  local theme_set="$home_dir/.config/omaniri/hooks/theme-set"
   local status
 
   rm -f "$TMP_ROOT/install-git-branch.log"
@@ -2412,8 +2412,8 @@ test_install_preserves_user_theme_set_hook() {
   printf '#!/usr/bin/env bash\nprintf user-hook\n' > "$theme_set"
   make_stub_bin "$bin_dir" pacman 'exit 0'
   make_stub_bin "$bin_dir" sudo 'printf "sudo should not be called\n" >&2; exit 1'
-  make_stub_bin "$bin_dir" omarchy-hook 'exit 0'
-  make_stub_bin "$bin_dir" omarchy-show-done 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-hook 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-show-done 'exit 0'
   make_install_git_stub "$bin_dir"
 
   PATH="$bin_dir:$PATH" HOME="$home_dir" "$ROOT_DIR/install.sh" >/dev/null 2>&1
@@ -2433,15 +2433,15 @@ test_install_interactive_prompt_installs_missing_adw_theme() {
 
   rm -f "$TMP_ROOT/install-git-branch.log"
   rm -f "$TMP_ROOT/install-git-args.log"
-  mkdir -p "$bin_dir" "$home_dir/.config/omarchy/hooks"
+  mkdir -p "$bin_dir" "$home_dir/.config/omaniri/hooks"
   make_stub_bin "$bin_dir" pacman 'exit 1'
   cat > "$bin_dir/sudo" <<EOF
 #!/usr/bin/env bash
 printf '%s\n' "\$*" > "$sudo_log"
 EOF
   chmod +x "$bin_dir/sudo"
-  make_stub_bin "$bin_dir" omarchy-hook 'exit 0'
-  make_stub_bin "$bin_dir" omarchy-show-done 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-hook 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-show-done 'exit 0'
   make_install_git_stub "$bin_dir"
 
   output="$(printf 'y\n' | PATH="$bin_dir:/bin" HOME="$home_dir" "$ROOT_DIR/install.sh" 2>&1)"
@@ -2463,7 +2463,7 @@ test_install_gum_prompt_installs_missing_adw_theme() {
 
   rm -f "$TMP_ROOT/install-git-branch.log"
   rm -f "$TMP_ROOT/install-git-args.log"
-  mkdir -p "$bin_dir" "$home_dir/.config/omarchy/hooks"
+  mkdir -p "$bin_dir" "$home_dir/.config/omaniri/hooks"
   make_stub_bin "$bin_dir" pacman 'exit 1'
   cat > "$bin_dir/gum" <<EOF
 #!/usr/bin/env bash
@@ -2477,8 +2477,8 @@ EOF
 printf '%s\n' "\$*" > "$sudo_log"
 EOF
   chmod +x "$bin_dir/sudo"
-  make_stub_bin "$bin_dir" omarchy-hook 'exit 0'
-  make_stub_bin "$bin_dir" omarchy-show-done 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-hook 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-show-done 'exit 0'
   make_install_git_stub "$bin_dir"
 
   PATH="$bin_dir:/bin" HOME="$home_dir" "$ROOT_DIR/install.sh" >/dev/null 2>&1
@@ -2495,24 +2495,24 @@ test_uninstall_removes_files_and_qutebrowser_theme() {
   local bin_dir="$TMP_ROOT/uninstall-bin"
   local output
 
-  mkdir -p "$bin_dir" "$home_dir/.local/bin" "$home_dir/.local/share/omarchy/bin" "$home_dir/.config/omarchy/hooks/theme-set.d" "$home_dir/.config/omarchy/branding" "$home_dir/.config/qutebrowser/omarchy" "$home_dir/.zen/default/chrome"
+  mkdir -p "$bin_dir" "$home_dir/.local/bin" "$home_dir/.local/share/omaniri/bin" "$home_dir/.config/omaniri/hooks/theme-set.d" "$home_dir/.config/omaniri/branding" "$home_dir/.config/qutebrowser/omaniri" "$home_dir/.zen/default/chrome"
   printf '#!/usr/bin/env bash\n' > "$home_dir/.local/bin/thpm"
-  printf '#!/usr/bin/env bash\n' > "$home_dir/.local/share/omarchy/bin/thpm"
-  printf 'default about\n' > "$home_dir/.local/share/omarchy/icon.txt"
-  printf 'default screensaver\n' > "$home_dir/.local/share/omarchy/logo.txt"
-  printf 'themed about\n' > "$home_dir/.config/omarchy/branding/about.txt"
-  printf 'themed screensaver\n' > "$home_dir/.config/omarchy/branding/screensaver.txt"
-  printf '# Omarchy 3.3+ uses colors.toml as the source of truth for theme colors.\n' > "$home_dir/.config/omarchy/hooks/theme-set"
-  printf '#!/usr/bin/env bash\n' > "$home_dir/.config/omarchy/hooks/theme-set.d/00-fzf.sh"
-  printf '#!/usr/bin/env bash\n' > "$home_dir/.config/omarchy/hooks/theme-set.d/10-branding.sh"
-  cp "$ROOT_DIR/theme-set.d/40-zen.sh" "$home_dir/.config/omarchy/hooks/theme-set.d/40-zen.sh"
-  printf '#!/usr/bin/env bash\n' > "$home_dir/.config/omarchy/hooks/theme-set.d/99-custom.sh"
+  printf '#!/usr/bin/env bash\n' > "$home_dir/.local/share/omaniri/bin/thpm"
+  printf 'default about\n' > "$home_dir/.local/share/omaniri/icon.txt"
+  printf 'default screensaver\n' > "$home_dir/.local/share/omaniri/logo.txt"
+  printf 'themed about\n' > "$home_dir/.config/omaniri/branding/about.txt"
+  printf 'themed screensaver\n' > "$home_dir/.config/omaniri/branding/screensaver.txt"
+  printf '# Omaniri 3.3+ uses colors.toml as the source of truth for theme colors.\n' > "$home_dir/.config/omaniri/hooks/theme-set"
+  printf '#!/usr/bin/env bash\n' > "$home_dir/.config/omaniri/hooks/theme-set.d/00-fzf.sh"
+  printf '#!/usr/bin/env bash\n' > "$home_dir/.config/omaniri/hooks/theme-set.d/10-branding.sh"
+  cp "$ROOT_DIR/theme-set.d/40-zen.sh" "$home_dir/.config/omaniri/hooks/theme-set.d/40-zen.sh"
+  printf '#!/usr/bin/env bash\n' > "$home_dir/.config/omaniri/hooks/theme-set.d/99-custom.sh"
   mkdir -p "$home_dir/.local/share/thpm/lib"
   printf '#!/usr/bin/env bash\n' > "$home_dir/.local/share/thpm/lib/theme-env.sh"
   cat > "$home_dir/.config/qutebrowser/config.py" <<'EOF'
 config.load_autoconfig()
-import omarchy.draw
-omarchy.draw.apply(c)
+import omaniri.draw
+omaniri.draw.apply(c)
 EOF
   cat > "$home_dir/.zen/profiles.ini" <<'EOF'
 [Install123]
@@ -2525,28 +2525,28 @@ EOF
 EOF
   printf 'managed\n' > "$home_dir/.zen/default/chrome/thpm-zen-userChrome.css"
 
-  make_stub_bin "$bin_dir" omarchy-show-logo 'printf "logo\n"'
-  make_stub_bin "$bin_dir" omarchy-show-done 'printf "done\n"'
+  make_stub_bin "$bin_dir" omaniri-show-logo 'printf "logo\n"'
+  make_stub_bin "$bin_dir" omaniri-show-done 'printf "done\n"'
   make_stub_bin "$bin_dir" python 'exit 1'
   make_stub_bin "$bin_dir" spicetify 'exit 1'
   make_stub_bin "$bin_dir" gsettings 'exit 1'
   make_stub_bin "$bin_dir" qutebrowser 'exit 0'
   make_stub_bin "$bin_dir" vicinae 'exit 1'
 
-  output="$(OMARCHY_PATH="$home_dir/.local/share/omarchy" PATH="$bin_dir:$PATH" HOME="$home_dir" bash "$ROOT_DIR/uninstall.sh" 2>&1)"
+  output="$(OMANIRI_PATH="$home_dir/.local/share/omaniri" PATH="$bin_dir:$PATH" HOME="$home_dir" bash "$ROOT_DIR/uninstall.sh" 2>&1)"
 
   assert_contains "$output" "Uninstalled thpm!" "uninstall reports completion"
   assert_file_missing "$home_dir/.local/bin/thpm" "uninstall removes thpm binary"
-  assert_file_missing "$home_dir/.local/share/omarchy/bin/thpm" "uninstall removes legacy omarchy bin thpm"
-  assert_file_missing "$home_dir/.config/omarchy/hooks/theme-set" "uninstall removes theme-set hook"
-  assert_file_missing "$home_dir/.config/omarchy/hooks/theme-set.d/00-fzf.sh" "uninstall removes bundled plugin"
-  assert_file_missing "$home_dir/.config/omarchy/hooks/theme-set.d/10-branding.sh" "uninstall removes branding plugin"
-  assert_file_missing "$home_dir/.config/omarchy/hooks/theme-set.d/40-zen.sh" "uninstall removes zen plugin"
-  assert_file_exists "$home_dir/.config/omarchy/hooks/theme-set.d/99-custom.sh" "uninstall preserves custom Omarchy hook"
-  assert_eq "default about" "$(cat "$home_dir/.config/omarchy/branding/about.txt")" "uninstall restores Omarchy about branding default"
-  assert_eq "default screensaver" "$(cat "$home_dir/.config/omarchy/branding/screensaver.txt")" "uninstall restores Omarchy screensaver branding default"
+  assert_file_missing "$home_dir/.local/share/omaniri/bin/thpm" "uninstall removes legacy omaniri bin thpm"
+  assert_file_missing "$home_dir/.config/omaniri/hooks/theme-set" "uninstall removes theme-set hook"
+  assert_file_missing "$home_dir/.config/omaniri/hooks/theme-set.d/00-fzf.sh" "uninstall removes bundled plugin"
+  assert_file_missing "$home_dir/.config/omaniri/hooks/theme-set.d/10-branding.sh" "uninstall removes branding plugin"
+  assert_file_missing "$home_dir/.config/omaniri/hooks/theme-set.d/40-zen.sh" "uninstall removes zen plugin"
+  assert_file_exists "$home_dir/.config/omaniri/hooks/theme-set.d/99-custom.sh" "uninstall preserves custom Omaniri hook"
+  assert_eq "default about" "$(cat "$home_dir/.config/omaniri/branding/about.txt")" "uninstall restores Omaniri about branding default"
+  assert_eq "default screensaver" "$(cat "$home_dir/.config/omaniri/branding/screensaver.txt")" "uninstall restores Omaniri screensaver branding default"
   assert_file_missing "$home_dir/.local/share/thpm/lib/theme-env.sh" "uninstall removes shared theme env"
-  assert_file_missing "$home_dir/.config/qutebrowser/omarchy" "uninstall removes qutebrowser theme directory"
+  assert_file_missing "$home_dir/.config/qutebrowser/omaniri" "uninstall removes qutebrowser theme directory"
   assert_eq "config.load_autoconfig()" "$(cat "$home_dir/.config/qutebrowser/config.py")" "uninstall removes qutebrowser config lines"
   assert_file_missing "$home_dir/.zen/default/chrome/thpm-zen-userChrome.css" "uninstall removes managed zen stylesheet"
   assert_not_contains "$(cat "$home_dir/.zen/default/chrome/userChrome.css")" "THPM Zen hook" "uninstall removes zen import block"
@@ -2557,25 +2557,25 @@ test_uninstall_warns_and_preserves_branding_when_default_missing() {
   local bin_dir="$TMP_ROOT/uninstall-branding-missing-bin"
   local output
 
-  mkdir -p "$bin_dir" "$home_dir/.local/share/omarchy" "$home_dir/.config/omarchy/branding"
-  printf 'default about\n' > "$home_dir/.local/share/omarchy/icon.txt"
-  printf 'themed about\n' > "$home_dir/.config/omarchy/branding/about.txt"
-  printf 'themed screensaver\n' > "$home_dir/.config/omarchy/branding/screensaver.txt"
+  mkdir -p "$bin_dir" "$home_dir/.local/share/omaniri" "$home_dir/.config/omaniri/branding"
+  printf 'default about\n' > "$home_dir/.local/share/omaniri/icon.txt"
+  printf 'themed about\n' > "$home_dir/.config/omaniri/branding/about.txt"
+  printf 'themed screensaver\n' > "$home_dir/.config/omaniri/branding/screensaver.txt"
 
-  make_stub_bin "$bin_dir" omarchy-show-logo 'exit 0'
-  make_stub_bin "$bin_dir" omarchy-show-done 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-show-logo 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-show-done 'exit 0'
   make_stub_bin "$bin_dir" python 'exit 1'
   make_stub_bin "$bin_dir" spicetify 'exit 1'
   make_stub_bin "$bin_dir" gsettings 'exit 1'
   make_stub_bin "$bin_dir" qutebrowser 'exit 1'
   make_stub_bin "$bin_dir" vicinae 'exit 1'
 
-  output="$(OMARCHY_PATH="$home_dir/.local/share/omarchy" PATH="$bin_dir:$PATH" HOME="$home_dir" bash "$ROOT_DIR/uninstall.sh" 2>&1)"
+  output="$(OMANIRI_PATH="$home_dir/.local/share/omaniri" PATH="$bin_dir:$PATH" HOME="$home_dir" bash "$ROOT_DIR/uninstall.sh" 2>&1)"
 
-  assert_contains "$output" "Warning: Omarchy screensaver branding default not found" "uninstall warns when screensaver default is missing"
+  assert_contains "$output" "Warning: Omaniri screensaver branding default not found" "uninstall warns when screensaver default is missing"
   assert_contains "$output" "Uninstalled thpm!" "uninstall continues after missing branding default"
-  assert_eq "default about" "$(cat "$home_dir/.config/omarchy/branding/about.txt")" "uninstall restores available about default"
-  assert_eq "themed screensaver" "$(cat "$home_dir/.config/omarchy/branding/screensaver.txt")" "uninstall preserves screensaver branding when default is missing"
+  assert_eq "default about" "$(cat "$home_dir/.config/omaniri/branding/about.txt")" "uninstall restores available about default"
+  assert_eq "themed screensaver" "$(cat "$home_dir/.config/omaniri/branding/screensaver.txt")" "uninstall preserves screensaver branding when default is missing"
 }
 
 test_uninstall_invokes_external_revert_commands() {
@@ -2592,8 +2592,8 @@ test_uninstall_invokes_external_revert_commands() {
 printf '%s\n' "\$*" > "$steam_log"
 EOF
   chmod +x "$home_dir/.local/share/steam-adwaita/install.py"
-  make_stub_bin "$bin_dir" omarchy-show-logo 'exit 0'
-  make_stub_bin "$bin_dir" omarchy-show-done 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-show-logo 'exit 0'
+  make_stub_bin "$bin_dir" omaniri-show-done 'exit 0'
   make_stub_bin "$bin_dir" python 'exit 0'
   cat > "$bin_dir/spicetify" <<EOF
 #!/usr/bin/env bash
@@ -2661,7 +2661,7 @@ print_coverage_summary() {
 main() {
   test_shell_syntax
   test_installer_bundled_plugin_inventory_matches_hooks
-  test_project_omarchy_default_contract
+  test_project_omaniri_default_contract
   test_thpm_help
   test_thpm_cli_uses_terminal_palette_roles
   test_thpm_install_skills_prompts_and_installs_codex_skill
@@ -2734,7 +2734,7 @@ main() {
   test_install_respects_branch_override
   test_install_preserves_existing_sample_disabled_plugin
   test_install_disabled_sample_wins_over_stale_active_plugin
-  test_install_preserves_custom_omarchy_hook
+  test_install_preserves_custom_omaniri_hook
   test_install_preserves_custom_sample_hook
   test_install_preserves_user_theme_set_hook
   test_install_interactive_prompt_installs_missing_adw_theme

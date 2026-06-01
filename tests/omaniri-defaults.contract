@@ -1,0 +1,13 @@
+# Omaniri defaults this project currently depends on.
+# If Omaniri changes any of these conventions, update this file first, then fix
+# the scripts and docs until tests pass again.
+HOOK_DIR=.config/omaniri/hooks/theme-set.d
+THEME_DIR=.config/omaniri/current/theme
+COLORS_FILE=.config/omaniri/current/theme/colors.toml
+LIGHT_MODE_FILE=.config/omaniri/current/theme/light.mode
+THEME_NAME_FILE=.config/omaniri/current/theme.name
+THEME_STORE_DIR=.config/omaniri/themes
+HOOK_NAME=theme-set
+LEGACY_DISPATCHER=.config/omaniri/hooks/theme-set
+LEGACY_BIN_DIR=.local/share/omaniri/bin
+SHARED_RUNTIME=.local/share/thpm/lib/theme-env.sh

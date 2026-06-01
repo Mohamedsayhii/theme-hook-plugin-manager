@@ -9,7 +9,7 @@ User setup and normal commands live in the main [README](../README.md).
 Installed plugins live in:
 
 ```text
-~/.config/omarchy/hooks/theme-set.d/
+~/.config/omaniri/hooks/theme-set.d/
 ```
 
 Bundled plugin source lives in this repository under:
@@ -28,7 +28,7 @@ Lower numbers run earlier. Higher numbers run later.
 
 ## Enable and Disable
 
-Plugins use Omarchy's native hook convention. A plugin is enabled when it ends in `.sh`; it is disabled when it ends in `.sh.sample`.
+Plugins use Omaniri's native hook convention. A plugin is enabled when it ends in `.sh`; it is disabled when it ends in `.sh.sample`.
 
 Use `thpm` for normal toggling:
 
@@ -39,7 +39,7 @@ thpm disable myapp
 
 ## Available Theme Values
 
-Plugins run directly as Omarchy `theme-set.d` hooks. Source the shared `thpm` theme environment before using theme colors or helpers:
+Plugins run directly as Omaniri `theme-set.d` hooks. Source the shared `thpm` theme environment before using theme colors or helpers:
 
 ```bash
 source "${THPM_THEME_ENV:-$HOME/.local/share/thpm/lib/theme-env.sh}"
@@ -128,13 +128,13 @@ success "myapp theme updated!"
 Save it as:
 
 ```text
-~/.config/omarchy/hooks/theme-set.d/50-myapp.sh
+~/.config/omaniri/hooks/theme-set.d/50-myapp.sh
 ```
 
 It is enabled immediately because it ends in `.sh`. To install it disabled, save it as:
 
 ```text
-~/.config/omarchy/hooks/theme-set.d/50-myapp.sh.sample
+~/.config/omaniri/hooks/theme-set.d/50-myapp.sh.sample
 ```
 
 Then manage it by name:
@@ -152,27 +152,27 @@ thpm run
 `thpm` reads colors from:
 
 ```text
-~/.config/omarchy/current/theme/colors.toml
+~/.config/omaniri/current/theme/colors.toml
 ```
 
-This matches Omarchy 3.3+ themes.
+This matches Omaniri 3.3+ themes.
 
 ## Theme Branding Files
 
 The bundled branding plugin is installed disabled by default. After `thpm enable branding`, it uses these active-theme files when they exist:
 
 ```text
-~/.config/omarchy/current/theme/about.txt
-~/.config/omarchy/current/theme/screensaver.txt
+~/.config/omaniri/current/theme/about.txt
+~/.config/omaniri/current/theme/screensaver.txt
 ```
 
-`about.txt` is copied to `~/.config/omarchy/branding/about.txt` for Fastfetch/About. `screensaver.txt` is copied to `~/.config/omarchy/branding/screensaver.txt` for the Omarchy screensaver. Missing branding files are non-destructive and leave the current user branding in place.
+`about.txt` is copied to `~/.config/omaniri/branding/about.txt` for Fastfetch/About. `screensaver.txt` is copied to `~/.config/omaniri/branding/screensaver.txt` for the Omaniri screensaver. Missing branding files are non-destructive and leave the current user branding in place.
 
-Disabling the branding plugin only stops future syncs. Uninstalling `thpm` restores Omarchy's current source defaults from `~/.local/share/omarchy/icon.txt` and `~/.local/share/omarchy/logo.txt` when those files are present.
+Disabling the branding plugin only stops future syncs. Uninstalling `thpm` restores Omaniri's current source defaults from `~/.local/share/omaniri/icon.txt` and `~/.local/share/omaniri/logo.txt` when those files are present.
 
 ## Doctor Checks
 
-`thpm doctor` is read-only. It checks the Omarchy hook directory, the shared
+`thpm doctor` is read-only. It checks the Omaniri hook directory, the shared
 runtime, the active `colors.toml`, enabled hook syntax, and common app-specific
 requirements.
 

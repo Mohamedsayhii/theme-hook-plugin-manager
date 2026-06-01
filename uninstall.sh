@@ -2,9 +2,9 @@
 
 set -e
 
-OMARCHY_PATH="${OMARCHY_PATH:-$HOME/.local/share/omarchy}"
+OMANIRI_PATH="${OMANIRI_PATH:-$HOME/.local/share/omaniri}"
 
-restore_omarchy_branding_file() {
+restore_omaniri_branding_file() {
     local source_file="$1"
     local target_file="$2"
     local label="$3"
@@ -13,29 +13,29 @@ restore_omarchy_branding_file() {
         mkdir -p "$(dirname "$target_file")"
         cp -f "$source_file" "$target_file"
     else
-        echo "Warning: Omarchy $label branding default not found: $source_file"
+        echo "Warning: Omaniri $label branding default not found: $source_file"
     fi
 }
 
-restore_omarchy_branding_defaults() {
-    restore_omarchy_branding_file "$OMARCHY_PATH/icon.txt" "$HOME/.config/omarchy/branding/about.txt" "about"
-    restore_omarchy_branding_file "$OMARCHY_PATH/logo.txt" "$HOME/.config/omarchy/branding/screensaver.txt" "screensaver"
+restore_omaniri_branding_defaults() {
+    restore_omaniri_branding_file "$OMANIRI_PATH/icon.txt" "$HOME/.config/omaniri/branding/about.txt" "about"
+    restore_omaniri_branding_file "$OMANIRI_PATH/logo.txt" "$HOME/.config/omaniri/branding/screensaver.txt" "screensaver"
 }
 
-omarchy-show-logo
+omaniri-show-logo
 
 echo "Uninstalling thpm.."
 
 rm -rf /tmp/theme-hook/
 rm -f "$HOME/.local/bin/thpm"
-rm -f "$HOME/.local/share/omarchy/bin/thpm"
-rm -f "$HOME/.local/share/omarchy/bin/thctl"
+rm -f "$HOME/.local/share/omaniri/bin/thpm"
+rm -f "$HOME/.local/share/omaniri/bin/thctl"
 rm -f "$HOME/.local/share/thpm/lib/theme-env.sh"
 rm -rf "$HOME/.local/share/thpm/skills"
 rmdir "$HOME/.local/share/thpm/lib" "$HOME/.local/share/thpm" 2>/dev/null || true
 
-if [[ -f "$HOME/.config/omarchy/hooks/theme-set" ]] && grep -Eq 'Omarchy 3\.3\+ uses colors\.toml|Compatibility shim for older thpm installs' "$HOME/.config/omarchy/hooks/theme-set"; then
-    rm -f "$HOME/.config/omarchy/hooks/theme-set"
+if [[ -f "$HOME/.config/omaniri/hooks/theme-set" ]] && grep -Eq 'Omaniri 3\.3\+ uses colors\.toml|Compatibility shim for older thpm installs' "$HOME/.config/omaniri/hooks/theme-set"; then
+    rm -f "$HOME/.config/omaniri/hooks/theme-set"
 fi
 
 bundled_plugins=(
@@ -68,19 +68,19 @@ bundled_plugins=(
     50-heroic.sh
 )
 
-for zen_hook in "$HOME"/.config/omarchy/hooks/theme-set.d/*-zen.sh "$HOME"/.config/omarchy/hooks/theme-set.d/*-zen.sh.sample; do
+for zen_hook in "$HOME"/.config/omaniri/hooks/theme-set.d/*-zen.sh "$HOME"/.config/omaniri/hooks/theme-set.d/*-zen.sh.sample; do
     [[ -f "$zen_hook" ]] || continue
     bash "$zen_hook" --cleanup > /dev/null 2>&1 || true
     break
 done
 
 for plugin in "${bundled_plugins[@]}"; do
-    rm -f "$HOME/.config/omarchy/hooks/theme-set.d/$plugin"
-    rm -f "$HOME/.config/omarchy/hooks/theme-set.d/$plugin.sample"
+    rm -f "$HOME/.config/omaniri/hooks/theme-set.d/$plugin"
+    rm -f "$HOME/.config/omaniri/hooks/theme-set.d/$plugin.sample"
 done
-rmdir "$HOME/.config/omarchy/hooks/theme-set.d" 2>/dev/null || true
+rmdir "$HOME/.config/omaniri/hooks/theme-set.d" 2>/dev/null || true
 
-restore_omarchy_branding_defaults
+restore_omaniri_branding_defaults
 
 echo "Attempting to revert applied themes.."
 
@@ -101,11 +101,11 @@ fi
 
 # Remove Qutebrowser theme
 if command -v qutebrowser >/dev/null 2>&1; then
-    rm -rf "$HOME/.config/qutebrowser/omarchy"
+    rm -rf "$HOME/.config/qutebrowser/omaniri"
     config_file="$HOME/.config/qutebrowser/config.py"
     if [[ -f "$config_file" ]]; then
-        sed -i '/import omarchy\.draw/d' "$config_file"
-        sed -i '/omarchy\.draw\.apply(c)/d' "$config_file"
+        sed -i '/import omaniri\.draw/d' "$config_file"
+        sed -i '/omaniri\.draw\.apply(c)/d' "$config_file"
     fi
 fi
 
@@ -116,4 +116,4 @@ fi
 
 echo "Uninstalled thpm!"
 
-omarchy-show-done
+omaniri-show-done

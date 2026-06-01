@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 source "${THPM_THEME_ENV:-$HOME/.local/share/thpm/lib/theme-env.sh}"
-output_file="$HOME/.config/omarchy/current/theme/vscode_colors.json"
+output_file="$HOME/.config/omaniri/current/theme/vscode_colors.json"
 
 if ! command -v cursor >/dev/null 2>&1; then
     skipped "Cursor"
@@ -11,7 +11,7 @@ if ! command -v jq >/dev/null 2>&1; then
 fi
 
 # check current theme for vscode.json
-if [[ -f "$HOME/.config/omarchy/current/theme/vscode.json" ]]; then
+if [[ -f "$HOME/.config/omaniri/current/theme/vscode.json" ]]; then
     exit 0
 fi
 
@@ -19,7 +19,7 @@ if [[ ! -f "$output_file" ]]; then
     cat > "$output_file" << EOF
 {
     "\$schema": "vscode://schemas/color-theme",
-    "name": "Omarchy",
+    "name": "Omaniri",
     "type": "",
     "colors": {
     // Base colors
@@ -1279,10 +1279,10 @@ find_cursor_extension_dir() {
 }
 
 modify_extension_manifest() {
-    omarchy_entry=$(jq 'first(.contributes.themes[] | select(.label == "Omarchy"))' "$install_path/package.json")
-    if [[ -z "$omarchy_entry" ]]; then
-        omarchy_entry='{"label": "Omarchy", "uiTheme": "vs-dark", "path": "./themes/base16/omarchy.json"}'
-        new_manifest=$(jq --argjson theme "$omarchy_entry" '.contributes.themes += [$theme]' "${install_path}/package.json")
+    omaniri_entry=$(jq 'first(.contributes.themes[] | select(.label == "Omaniri"))' "$install_path/package.json")
+    if [[ -z "$omaniri_entry" ]]; then
+        omaniri_entry='{"label": "Omaniri", "uiTheme": "vs-dark", "path": "./themes/base16/omaniri.json"}'
+        new_manifest=$(jq --argjson theme "$omaniri_entry" '.contributes.themes += [$theme]' "${install_path}/package.json")
         echo "$new_manifest" > "${install_path}/package.json"
     fi
 }
@@ -1291,7 +1291,7 @@ install_cursor_extension
 find_cursor_extension_dir
 modify_extension_manifest
 
-install_location="$install_path/themes/base16/omarchy.json"
+install_location="$install_path/themes/base16/omaniri.json"
 mkdir -p "$(dirname "$install_location")"
 cp "$output_file" "$install_location"
 
